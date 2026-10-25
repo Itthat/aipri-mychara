@@ -110,6 +110,8 @@ h1 {
 .name-area {
   margin-bottom: 20px;
   padding: 15px 18px;
+  height: 85px;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: white;
@@ -124,7 +126,9 @@ h1 {
 .character-name {
   font-size: 22px;
   font-weight: bold;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .empty-message {
