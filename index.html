@@ -11,167 +11,282 @@
   box-sizing: border-box;
 }
 
+:root {
+  --border: #dedede;
+  --muted: #777;
+  --soft: #f6f6f6;
+}
+
 body {
   margin: 0;
-  background: #ffffff;
-  color: #333333;
+  background: #fff;
+  color: #333;
   font-family: Arial, "Malgun Gothic", sans-serif;
 }
 
 header {
-  padding: 28px 20px;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
   text-align: center;
-  border-bottom: 1px solid #dddddd;
 }
 
-h1 {
+header h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
-}
-
-header p {
-  margin: 8px 0 0;
-  color: #777777;
-  font-size: 14px;
 }
 
 main {
-  max-width: 1200px;
-  margin: 28px auto;
-  padding: 0 18px;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-section {
-  margin-bottom: 32px;
-}
-
-h2 {
-  margin-bottom: 16px;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-button,
-input,
-select {
-  padding: 9px 11px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  background: #ffffff;
-  color: #333333;
+button, input, select {
   font: inherit;
 }
 
 button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  color: #333;
   cursor: pointer;
 }
 
 button:hover {
-  background: #f5f5f5;
+  background: var(--soft);
 }
 
-#message {
-  color: #777777;
-  font-size: 13px;
+.character-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.table-wrap {
-  overflow-x: auto;
+.character-tools select,
+.character-tools input {
+  min-width: 120px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
+.name-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
 }
 
-th,
-td {
-  min-width: 115px;
-  padding: 9px;
-  border: 1px solid #dddddd;
-  text-align: center;
-}
-
-th {
-  background: #f5f5f5;
+.name-label {
   font-weight: 600;
 }
 
-td {
-  background: #ffffff;
+#displayName {
+  overflow-wrap: anywhere;
 }
 
-.part-image {
-  display: block;
-  width: 100%;
-  height: 115px;
-  object-fit: contain;
+#message {
+  margin: 8px 0 16px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-.part-name {
-  margin-top: 5px;
+/* 파츠 표: 가로 스크롤 없이 화면 너비에 맞춤 */
+.parts-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.part-card {
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-align: center;
+}
+
+.part-category {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 5px 3px;
+  background: var(--soft);
+  border-bottom: 1px solid var(--border);
   font-size: 13px;
   overflow-wrap: anywhere;
 }
 
-.empty {
-  display: grid;
-  height: 115px;
-  place-items: center;
-  color: #bbbbbb;
-  font-size: 12px;
-}
-
-.part-select {
-  width: 100%;
-  min-width: 95px;
-}
-
-#faceGallery {
+.part-preview {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.face-card {
-  width: 125px;
-  padding: 8px;
-  border: 1px solid #dddddd;
-  text-align: center;
-}
-
-.face-card img {
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 112px;
+  padding: 5px;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+}
+
+.part-preview:hover {
+  background: #fafafa;
+}
+
+.part-preview img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
-footer {
-  padding: 20px;
-  border-top: 1px solid #dddddd;
-  color: #777777;
+.part-empty {
+  color: #bbb;
   font-size: 12px;
-  text-align: center;
 }
 
-@media (max-width: 600px) {
-  main {
-    padding: 0 10px;
+.part-label {
+  min-height: 30px;
+  padding: 6px 3px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.part-action {
+  width: 100%;
+  padding: 7px 3px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  font-size: 12px;
+}
+
+/* 이미지 선택 창 */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 100%);
+  max-height: 85vh;
+  background: white;
+  border: 1px solid #ddd;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.modal-body {
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.image-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.image-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  background: white;
+}
+
+.image-option:hover {
+  border-color: #777;
+  background: #f8f8f8;
+}
+
+.image-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.clear-option {
+  display: block;
+  margin: 12px auto 0;
+}
+
+@media (min-width: 1100px) {
+  .parts-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1099px) {
+  .parts-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  th,
-  td {
-    min-width: 105px;
-    padding: 6px;
+  .part-preview {
+    height: 100px;
+  }
+}
+
+@media (max-width: 699px) {
+  main {
+    padding: 12px;
+  }
+
+  header h1 {
+    font-size: 21px;
+  }
+
+  .parts-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .part-category {
+    font-size: 12px;
+  }
+
+  .part-preview {
+    height: 90px;
+  }
+
+  .image-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 </style>
@@ -180,97 +295,91 @@ footer {
 <body>
 <header>
   <!-- 문구 수정 영역 -->
-  <h1 id="siteTitle"></h1>
-  <p id="siteSubtitle"></p>
+  <h1 id="siteTitle">아이프리 마이캐릭터 도감</h1>
 </header>
 
 <main>
-  <section>
-    <!-- 문구 수정 영역 -->
-    <h2 id="characterHeading"></h2>
+  <div class="character-tools">
+    <select id="characterSelect" aria-label="캐릭터 선택"></select>
+    <button id="addCharacter">캐릭터 추가</button>
+    <input id="nameInput" placeholder="이름 입력" aria-label="캐릭터 이름">
+    <button id="saveName">이름 적용</button>
+    <button id="deleteCharacter">캐릭터 삭제</button>
+  </div>
 
-    <div class="controls">
-      <select id="characterSelect" aria-label="캐릭터 선택"></select>
-      <button id="addCharacter"></button>
-      <button id="renameCharacter"></button>
-    </div>
+  <div class="name-area">
+    <span class="name-label">이름</span>
+    <span id="displayName"></span>
+  </div>
 
-    <div class="controls">
-      <label>
-        <span id="nameLabel"></span>
-        <input id="characterName">
-      </label>
-      <button id="saveName"></button>
-    </div>
+  <p id="message"></p>
 
-    <p id="message"></p>
-  </section>
-
-  <section>
-    <!-- 문구 수정 영역 -->
-    <h2 id="partsHeading"></h2>
-    <p id="partsDescription"></p>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr id="headRow"></tr></thead>
-        <tbody>
-          <tr id="imageRow"></tr>
-          <tr id="labelRow"></tr>
-          <tr id="selectRow"></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <!-- 문구 수정 영역 -->
-    <h2 id="galleryHeading"></h2>
-    <p id="galleryDescription"></p>
-    <div id="faceGallery"></div>
-  </section>
+  <div id="partsGrid" class="parts-grid"></div>
 </main>
 
-<footer id="footerText"></footer>
+<div id="partModal" class="modal" role="dialog"
+     aria-modal="true" aria-label="파츠 선택">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">파츠 선택</h2>
+      <button id="closeModal" aria-label="닫기">닫기</button>
+    </div>
+    <div class="modal-body">
+      <div id="imageOptions" class="image-options"></div>
+      <button id="clearPart" class="clear-option">선택 해제</button>
+    </div>
+  </div>
+</div>
 
 <script>
-/* =========================================
+/* ==========================================
    문구 수정 영역
-   화면에 표시되는 한국어 문구를 수정합니다.
-========================================= */
+   사이트에 표시되는 문구는 여기서 수정합니다.
+========================================== */
 const TEXT = {
-  siteTitle: "아이프리 마이캐릭터 도감",
-  siteSubtitle: "마이캐릭터와 파츠 기록",
-  characterHeading: "캐릭터 목록",
+  title: "아이프리 마이캐릭터 도감",
   addCharacter: "캐릭터 추가",
-  renameCharacter: "이름 변경",
-  nameLabel: "이름",
   saveName: "이름 적용",
-  initialMessage: "캐릭터를 추가하고 파츠를 선택하세요.",
-  partsHeading: "캐릭터 파츠",
-  partsDescription: "각 항목에서 파츠를 하나씩 선택할 수 있습니다. 같은 파츠를 여러 캐릭터가 함께 사용할 수 있습니다.",
-  galleryHeading: "등록된 얼굴 파츠",
-  galleryDescription: "얼굴 파츠 목록",
-  emptyCell: "빈칸",
-  selectNone: "선택 안 함",
-  missingImage: "이미지를 찾을 수 없음",
-  noCharacters: "캐릭터를 추가해 주세요.",
-  askCharacterName: "캐릭터 이름을 입력하세요.",
+  deleteCharacter: "캐릭터 삭제",
+  namePlaceholder: "이름 입력",
+  choosePart: "파츠 선택",
+  close: "닫기",
+  clearPart: "선택 해제",
+  noCharacters: "캐릭터 추가",
+  askName: "새 캐릭터 이름을 입력하세요.",
+  confirmDelete: "선택한 캐릭터를 삭제할까요?",
   emptyName: "이름을 입력해 주세요.",
-  characterAdded: "캐릭터를 추가했습니다.",
-  nameUpdated: "이름을 변경했습니다.",
-  selectionUpdated: "파츠 선택을 변경했습니다.",
-  footerText: "아이프리 마이캐릭터 도감"
+  added: "캐릭터를 추가했습니다.",
+  deleted: "캐릭터를 삭제했습니다.",
+  saved: "이름을 적용했습니다.",
+  selected: "파츠를 선택했습니다.",
+  cleared: "파츠 선택을 해제했습니다.",
+  noParts: "등록된 이미지가 없습니다."
 };
 
-/* 파츠 종류 */
+/* ==========================================
+   파츠 종류
+========================================== */
 const CATEGORIES = [
-  "얼굴", "보이스", "피부", "앞머리", "뒷머리",
-  "헤어 컬러", "아이 컬러", "메시 타입", "메시 컬러",
-  "헤어 데코", "메이크업", "원 포인트", "부탁해 주얼"
+  "얼굴",
+  "보이스",
+  "피부",
+  "앞머리",
+  "뒷머리",
+  "헤어 컬러",
+  "아이 컬러",
+  "메시 타입",
+  "메시 컬러",
+  "헤어 데코",
+  "메이크업",
+  "원 포인트",
+  "부탁해 주얼"
 ];
 
-/* 파츠 이미지와 이름 */
+/* ==========================================
+   파츠 이미지 및 이름
+   새 이미지도 이 목록에 추가할 수 있습니다.
+========================================== */
 const PARTS = {
   "얼굴": [
     { image: "images/parts/Face_0001.webp", label: "おとめ" },
@@ -299,23 +408,12 @@ const PARTS = {
 /* 캐릭터 목록은 비워 둡니다. */
 let characters = [];
 let current = -1;
+let activeCategory = null;
 
 const $ = id => document.getElementById(id);
 
-function showText() {
-  $("siteTitle").textContent = TEXT.siteTitle;
-  $("siteSubtitle").textContent = TEXT.siteSubtitle;
-  $("characterHeading").textContent = TEXT.characterHeading;
-  $("addCharacter").textContent = TEXT.addCharacter;
-  $("renameCharacter").textContent = TEXT.renameCharacter;
-  $("nameLabel").textContent = TEXT.nameLabel;
-  $("saveName").textContent = TEXT.saveName;
-  $("message").textContent = TEXT.initialMessage;
-  $("partsHeading").textContent = TEXT.partsHeading;
-  $("partsDescription").textContent = TEXT.partsDescription;
-  $("galleryHeading").textContent = TEXT.galleryHeading;
-  $("galleryDescription").textContent = TEXT.galleryDescription;
-  $("footerText").textContent = TEXT.footerText;
+function setMessage(text) {
+  $("message").textContent = text;
 }
 
 function renderCharacters() {
@@ -323,13 +421,16 @@ function renderCharacters() {
   select.innerHTML = "";
 
   if (characters.length === 0) {
+    current = -1;
     const option = document.createElement("option");
     option.value = "";
     option.textContent = TEXT.noCharacters;
     select.appendChild(option);
-    current = -1;
-    $("characterName").value = "";
+    $("nameInput").value = "";
+    $("displayName").textContent = "";
   } else {
+    if (current < 0 || current >= characters.length) current = 0;
+
     characters.forEach((character, index) => {
       const option = document.createElement("option");
       option.value = index;
@@ -337,131 +438,143 @@ function renderCharacters() {
       select.appendChild(option);
     });
 
-    if (current < 0 || current >= characters.length) current = 0;
-    select.value = current;
-    $("characterName").value = characters[current].name;
+    select.value = String(current);
+    $("nameInput").value = characters[current].name;
+    $("displayName").textContent = characters[current].name;
   }
 
-  renderTable();
+  renderParts();
 }
 
-function renderTable() {
-  ["headRow", "imageRow", "labelRow", "selectRow"].forEach(id => {
-    $(id).innerHTML = "";
-  });
-
-  const character = characters[current];
-
-  const nameHeader = document.createElement("th");
-  nameHeader.textContent = "이름 칸";
-  $("headRow").appendChild(nameHeader);
-
-  const nameImage = document.createElement("td");
-  nameImage.innerHTML = '<div class="empty"></div>';
-  $("imageRow").appendChild(nameImage);
-
-  const nameLabel = document.createElement("td");
-  nameLabel.textContent = character ? character.name : "";
-  $("labelRow").appendChild(nameLabel);
-
-  const nameSelect = document.createElement("td");
-  nameSelect.textContent = character ? character.name : "";
-  $("selectRow").appendChild(nameSelect);
+function renderParts() {
+  const grid = $("partsGrid");
+  grid.innerHTML = "";
 
   CATEGORIES.forEach(category => {
-    const header = document.createElement("th");
-    header.textContent = category;
-    $("headRow").appendChild(header);
+    const card = document.createElement("div");
+    card.className = "part-card";
 
-    const selectedLabel = character && character.selections[category];
+    const heading = document.createElement("div");
+    heading.className = "part-category";
+    heading.textContent = category;
+
+    const previewButton = document.createElement("button");
+    previewButton.className = "part-preview";
+    previewButton.setAttribute("aria-label", category + " 선택");
+
+    const selectedLabel = current >= 0
+      ? characters[current].selections[category]
+      : null;
+
     const selectedPart = (PARTS[category] || []).find(
       part => part.label === selectedLabel
     );
 
-    const imageCell = document.createElement("td");
-
     if (selectedPart) {
       const image = document.createElement("img");
-      image.className = "part-image";
       image.src = selectedPart.image;
       image.alt = selectedPart.label;
+
       image.onerror = () => {
-        imageCell.innerHTML = "";
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.textContent = TEXT.missingImage;
-        imageCell.appendChild(empty);
+        previewButton.innerHTML = "";
+        const empty = document.createElement("span");
+        empty.className = "part-empty";
+        empty.textContent = "—";
+        previewButton.appendChild(empty);
       };
-      imageCell.appendChild(image);
+
+      previewButton.appendChild(image);
     } else {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.textContent = TEXT.emptyCell;
-      imageCell.appendChild(empty);
+      const empty = document.createElement("span");
+      empty.className = "part-empty";
+      empty.textContent = "—";
+      previewButton.appendChild(empty);
     }
 
-    $("imageRow").appendChild(imageCell);
+    previewButton.disabled = current < 0 ||
+      (PARTS[category] || []).length === 0;
 
-    const labelCell = document.createElement("td");
-    labelCell.className = "part-name";
-    labelCell.textContent = selectedPart ? selectedPart.label : "";
-    $("labelRow").appendChild(labelCell);
+    previewButton.addEventListener("click", () => openModal(category));
 
-    const selectCell = document.createElement("td");
-    const select = document.createElement("select");
-    select.className = "part-select";
-    select.setAttribute("aria-label", category);
+    const label = document.createElement("div");
+    label.className = "part-label";
+    label.textContent = selectedPart ? selectedPart.label : "";
 
-    const blank = document.createElement("option");
-    blank.value = "";
-    blank.textContent = TEXT.selectNone;
-    select.appendChild(blank);
+    const action = document.createElement("button");
+    action.className = "part-action";
+    action.textContent = TEXT.choosePart;
+    action.disabled = current < 0 ||
+      (PARTS[category] || []).length === 0;
+    action.addEventListener("click", () => openModal(category));
 
-    (PARTS[category] || []).forEach(part => {
-      const option = document.createElement("option");
-      option.value = part.label;
-      option.textContent = part.label;
-      select.appendChild(option);
-    });
-
-    select.value = selectedLabel || "";
-    select.disabled = !character || (PARTS[category] || []).length === 0;
-
-    select.addEventListener("change", () => {
-      if (!character) return;
-
-      if (select.value) character.selections[category] = select.value;
-      else delete character.selections[category];
-
-      renderTable();
-      $("message").textContent = TEXT.selectionUpdated;
-    });
-
-    selectCell.appendChild(select);
-    $("selectRow").appendChild(selectCell);
+    card.append(heading, previewButton, label, action);
+    grid.appendChild(card);
   });
 }
 
-function renderGallery() {
-  const gallery = $("faceGallery");
-  gallery.innerHTML = "";
+function openModal(category) {
+  if (current < 0) return;
 
-  PARTS["얼굴"].forEach(part => {
-    const card = document.createElement("div");
-    card.className = "face-card";
+  activeCategory = category;
+  $("modalTitle").textContent = category;
+  const options = $("imageOptions");
+  options.innerHTML = "";
+
+  const availableParts = PARTS[category] || [];
+
+  availableParts.forEach(part => {
+    const button = document.createElement("button");
+    button.className = "image-option";
+    button.setAttribute("aria-label", part.label);
+    button.title = part.label;
 
     const image = document.createElement("img");
     image.src = part.image;
     image.alt = part.label;
 
-    const label = document.createElement("div");
-    label.className = "part-name";
-    label.textContent = part.label;
+    image.onerror = () => {
+      button.remove();
+    };
 
-    card.append(image, label);
-    gallery.appendChild(card);
+    button.appendChild(image);
+    button.addEventListener("click", () => {
+      if (current < 0) return;
+
+      characters[current].selections[category] = part.label;
+      closeModal();
+      renderParts();
+      setMessage(TEXT.selected);
+    });
+
+    options.appendChild(button);
   });
+
+  $("partModal").classList.add("open");
 }
+
+function closeModal() {
+  $("partModal").classList.remove("open");
+  activeCategory = null;
+}
+
+$("closeModal").addEventListener("click", closeModal);
+
+$("partModal").addEventListener("click", event => {
+  if (event.target === $("partModal")) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeModal();
+});
+
+$("clearPart").addEventListener("click", () => {
+  if (current < 0 || !activeCategory) return;
+
+  delete characters[current].selections[activeCategory];
+  closeModal();
+  renderParts();
+  setMessage(TEXT.cleared);
+});
 
 $("characterSelect").addEventListener("change", () => {
   current = Number($("characterSelect").value);
@@ -469,40 +582,52 @@ $("characterSelect").addEventListener("change", () => {
 });
 
 $("addCharacter").addEventListener("click", () => {
-  const name = prompt(TEXT.askCharacterName);
+  const name = prompt(TEXT.askName);
   if (!name || !name.trim()) return;
 
-  characters.push({ name: name.trim(), selections: {} });
+  characters.push({
+    name: name.trim(),
+    selections: {}
+  });
+
   current = characters.length - 1;
   renderCharacters();
-  $("message").textContent = TEXT.characterAdded;
-});
-
-$("renameCharacter").addEventListener("click", () => {
-  $("characterName").focus();
+  setMessage(TEXT.added);
 });
 
 $("saveName").addEventListener("click", () => {
-  if (current < 0) {
-    $("message").textContent = TEXT.noCharacters;
-    return;
-  }
+  if (current < 0) return;
 
-  const name = $("characterName").value.trim();
-
+  const name = $("nameInput").value.trim();
   if (!name) {
-    $("message").textContent = TEXT.emptyName;
+    setMessage(TEXT.emptyName);
     return;
   }
 
   characters[current].name = name;
   renderCharacters();
-  $("message").textContent = TEXT.nameUpdated;
+  setMessage(TEXT.saved);
 });
 
-showText();
+$("deleteCharacter").addEventListener("click", () => {
+  if (current < 0) return;
+  if (!confirm(TEXT.confirmDelete)) return;
+
+  characters.splice(current, 1);
+  current = characters.length ? Math.min(current, characters.length - 1) : -1;
+  renderCharacters();
+  setMessage(TEXT.deleted);
+});
+
+$("siteTitle").textContent = TEXT.title;
+$("addCharacter").textContent = TEXT.addCharacter;
+$("saveName").textContent = TEXT.saveName;
+$("deleteCharacter").textContent = TEXT.deleteCharacter;
+$("nameInput").placeholder = TEXT.namePlaceholder;
+$("closeModal").textContent = TEXT.close;
+$("clearPart").textContent = TEXT.clearPart;
+
 renderCharacters();
-renderGallery();
 </script>
 </body>
 </html>
