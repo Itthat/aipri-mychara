@@ -784,11 +784,37 @@ function openPartsModal(category) {
   const options = $("partsOptions");
   options.replaceChildren();
 
+  // 파츠 없음: 선택하면 화면에 아무것도 표시하지 않습니다.
+  const blankButton = document.createElement("button");
+  blankButton.type = "button";
+  blankButton.className = "image-option";
+  blankButton.title = "파츠 없음 (적용하지 않음)";
+  blankButton.setAttribute(
+    "aria-label",
+    "파츠 없음 (적용하지 않음)"
+  );
+
+  blankButton.addEventListener("click", () => {
+    characters[currentCharacterIndex].parts[category] = {
+      none: true,
+      name: "",
+      image: ""
+    };
+
+    closeModal("partsModal");
+    applyTheme();
+    renderCharacters();
+    renderParts();
+  });
+
+  options.appendChild(blankButton);
+
+  // 파츠 미선택으로 되돌리는 버튼
   const clearButton = document.createElement("button");
   clearButton.type = "button";
   clearButton.className = "image-option";
-  clearButton.title = TEXT.clearPart;
-  clearButton.setAttribute("aria-label", TEXT.clearPart);
+  clearButton.title = "선택 해제";
+  clearButton.setAttribute("aria-label", "선택 해제");
 
   const clearText = document.createElement("span");
   clearText.className = "clear-option";
