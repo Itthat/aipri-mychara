@@ -760,9 +760,6 @@ function renderParts() {
 
     preview.addEventListener("click", () => {
       if (currentCharacterIndex < 0) {
-        $("newCharacterName").value = "";
-        openModal("addCharacterModal");
-        $("newCharacterName").focus();
         return;
       }
 
