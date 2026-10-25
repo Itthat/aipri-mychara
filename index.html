@@ -733,15 +733,21 @@ function renderParts() {
       ? characters[currentCharacterIndex].parts[category]
       : null;
 
-    if (selected) {
+    if (selected && selected.none !== true) {
       const image = document.createElement("img");
       image.src = selected.image;
       image.alt = selected.name;
       preview.appendChild(image);
-    } else {
+    } else if (!selected && currentCharacterIndex >= 0) {
       const placeholder = document.createElement("span");
       placeholder.className = "part-placeholder";
-      placeholder.textContent = currentCharacterIndex < 0 ? "—" : "+";
+      placeholder.textContent = "+";
+      placeholder.style.fontSize = "24px";
+      preview.appendChild(placeholder);
+    } else if (currentCharacterIndex < 0) {
+      const placeholder = document.createElement("span");
+      placeholder.className = "part-placeholder";
+      placeholder.textContent = "+";
       placeholder.style.fontSize = "24px";
       preview.appendChild(placeholder);
     }
@@ -761,7 +767,8 @@ function renderParts() {
 
     const partName = document.createElement("div");
     partName.className = "part-name";
-    partName.textContent = selected ? selected.name : " ";
+    partName.textContent =
+      selected && selected.none !== true ? selected.name : " ";
     card.appendChild(partName);
 
     grid.appendChild(card);
