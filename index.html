@@ -43,21 +43,35 @@ button:focus-visible, input:focus-visible {
 }
 
 h1 {
-  margin: 0 0 24px;
-  text-align: center;
+  margin: 0;
+  text-align: left;
   font-size: 27px;
 }
 
-.character-area { margin-bottom: 20px; }
+.character-area {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(0, 2fr);
+  grid-template-areas:
+    "title list"
+    ". tools";
+  column-gap: 20px;
+  row-gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
+#pageTitle { grid-area: title; }
 .character-list {
+  grid-area: list;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   align-content: flex-start;
   gap: 8px;
   height: 92px;
   overflow-y: auto;
-  margin-bottom: 12px;
+  overflow-x: hidden;
+  margin: 0;
   padding: 2px;
 }
 
@@ -82,7 +96,9 @@ h1 {
 }
 
 .character-tools {
+  grid-area: tools;
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -347,6 +363,12 @@ h1 {
 @media (max-width: 600px) {
   body { padding: 14px; }
   h1 { font-size: 22px; }
+  .character-area {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    column-gap: 10px;
+  }
+  .character-list { height: 92px; }
+  .character-button { max-width: 100%; }
 
   .parts-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -371,9 +393,8 @@ h1 {
 
 <body>
 <div class="page">
-  <h1 id="pageTitle"></h1>
-
   <section class="character-area">
+    <h1 id="pageTitle"></h1>
     <div class="character-list" id="characterList"></div>
     <div class="character-tools">
       <button class="btn btn-primary" id="addCharacterButton"></button>
