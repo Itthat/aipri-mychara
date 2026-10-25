@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아이프리 마이캐릭터 도감</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: #fff8fc;
+      color: #554454;
+    }
+
+    header {
+      padding: 32px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #f8dff0, #e2f8f4);
+      border-bottom: 3px solid #efc4df;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #bd659e;
+      font-size: 28px;
+    }
+
+    header p {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px;
+      background: white;
+      border-bottom: 1px solid #f0dce9;
+    }
+
+    nav a {
+      padding: 9px 18px;
+      border-radius: 20px;
+      background: #fff0f8;
+      color: #ad6394;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .welcome {
+      padding: 28px;
+      border: 1px solid #eed4e5;
+      border-radius: 18px;
+      background: white;
+      text-align: center;
+    }
+
+    .welcome h2 {
+      color: #bd659e;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .category {
+      padding: 24px 12px;
+      text-align: center;
+      background: white;
+      border: 1px solid #efd6e7;
+      border-radius: 14px;
+    }
+
+    .category .emoji {
+      font-size: 30px;
+    }
+
+    .category h3 {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .category p {
+      margin: 0;
+      color: #9a8495;
+      font-size: 12px;
+    }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #9a8495;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>♡ Aipri My Character ♡</h1>
+    <p>나만의 아이프리 마이캐릭터 도감</p>
+  </header>
+
+  <nav>
+    <a href="#home">HOME</a>
+    <a href="#parts">파츠 도감</a>
+    <a href="#coordinate">코디 도감</a>
+    <a href="#about">ABOUT</a>
+  </nav>
+
+  <main>
+    <section class="welcome" id="home">
+      <h2>Welcome to My Aipri Collection!</h2>
+      <p>나만의 마이캐릭터와 소중한 파츠들을 정리하는 공간</p>
+    </section>
+
+    <section id="parts">
+      <h2>♡ 파츠 도감</h2>
+      <div class="categories">
+        <article class="category">
+          <div class="emoji">👧</div>
+          <h3>얼굴 · 보이스</h3>
+          <p>얼굴과 보이스 파츠</p>
+        </article>
+        <article class="category">
+          <div class="emoji">🎀</div>
+          <h3>헤어</h3>
+          <p>앞머리 · 뒷머리 · 컬러</p>
+        </article>
+        <article class="category">
+          <div class="emoji">💎</div>
+          <h3>눈 · 피부</h3>
+          <p>아이 컬러 · 피부 · 메이크업</p>
+        </article>
+        <article class="category">
+          <div class="emoji">💖</div>
+          <h3>기타 파츠</h3>
+          <p>원하는 파츠 분류 추가 예정</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="coordinate" style="margin-top: 40px;">
+      <h2>♡ 코디 도감</h2>
+      <p>나만의 코디를 이곳에 정리할 예정이에요.</p>
+    </section>
+
+    <section id="about" style="margin-top: 40px;">
+      <h2>♡ ABOUT</h2>
+      <p>아이프리 마이캐릭터 기록용 개인 도감입니다.</p>
+    </section>
+  </main>
+
+  <footer>
+    Aipri My Character Collection ♡
+  </footer>
+</body>
+</html>
