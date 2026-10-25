@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,24 +6,18 @@
 <title>아이프리 마이캐릭터 도감</title>
 
 <style>
-/* =========================
-   기본 테마
-   기본 색상은 녹색 계열
-========================= */
 :root {
-  --theme: #a8c99b;
-  --theme-dark: #527b48;
-  --theme-light: #eef5e9;
-  --theme-text: #263b27;
-  --border: #dce6d7;
+  --theme: #e5e5e5;
+  --theme-dark: #777777;
+  --theme-light: #f7f7f7;
+  --theme-text: #333333;
+  --border: #dddddd;
   --text: #303a30;
   --subtext: #858d81;
   --background: #ffffff;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -34,22 +27,11 @@ body {
   font-family: Arial, "Malgun Gothic", sans-serif;
 }
 
-button,
-input {
-  font: inherit;
-}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-button:focus-visible,
-input:focus-visible {
+button:focus-visible, input:focus-visible {
   outline: 2px solid var(--theme-dark);
   outline-offset: 2px;
 }
@@ -66,18 +48,17 @@ h1 {
   font-size: 27px;
 }
 
-/* =========================
-   캐릭터 버튼 목록
-========================= */
-.character-area {
-  margin-bottom: 20px;
-}
+.character-area { margin-bottom: 20px; }
 
 .character-list {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   gap: 8px;
+  height: 92px;
+  overflow-y: auto;
   margin-bottom: 12px;
+  padding: 2px;
 }
 
 .character-button {
@@ -90,9 +71,7 @@ h1 {
   transition: background 0.15s, border-color 0.15s;
 }
 
-.character-button:hover {
-  background: var(--theme-light);
-}
+.character-button:hover { background: var(--theme-light); }
 
 .character-button.active {
   border-color: var(--theme-dark);
@@ -115,9 +94,7 @@ h1 {
   color: var(--text);
 }
 
-.btn:hover:not(:disabled) {
-  background: var(--theme-light);
-}
+.btn:hover:not(:disabled) { background: var(--theme-light); }
 
 .btn-primary {
   border-color: var(--theme);
@@ -126,17 +103,9 @@ h1 {
   font-weight: bold;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background: var(--theme-light);
-}
+.btn-primary:hover:not(:disabled) { background: var(--theme-light); }
+.btn-danger { color: #b34d4d; }
 
-.btn-danger {
-  color: #b34d4d;
-}
-
-/* =========================
-   이름 영역
-========================= */
 .name-area {
   margin-bottom: 20px;
   padding: 15px 18px;
@@ -163,9 +132,6 @@ h1 {
   text-align: center;
 }
 
-/* =========================
-   파츠 그리드
-========================= */
 .parts-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -194,7 +160,6 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* 파츠 선택 버튼 대신 이미지 영역 자체를 클릭 */
 .part-preview {
   display: flex;
   align-items: center;
@@ -207,9 +172,7 @@ h1 {
   transition: background 0.15s;
 }
 
-.part-preview:hover:not(:disabled) {
-  background: var(--theme-light);
-}
+.part-preview:hover { background: var(--theme-light); }
 
 .part-preview img {
   width: 100%;
@@ -232,9 +195,6 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-/* =========================
-   모달 공통
-========================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -246,9 +206,7 @@ h1 {
   background: rgba(35, 45, 33, 0.42);
 }
 
-.modal-overlay.is-open {
-  display: flex;
-}
+.modal-overlay.is-open { display: flex; }
 
 .modal {
   width: min(440px, 100%);
@@ -290,48 +248,6 @@ h1 {
   margin-top: 18px;
 }
 
-/* =========================
-   캐릭터별 테마 색상 선택
-========================= */
-.color-options {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.color-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 4px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: white;
-  color: var(--text);
-  font-size: 12px;
-}
-
-.color-option:hover {
-  background: var(--theme-light);
-}
-
-.color-option.selected {
-  border: 2px solid var(--theme-dark);
-  font-weight: bold;
-}
-
-.color-swatch {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* =========================
-   파츠 선택 모달
-   모달 자체는 항상 정사각형
-========================= */
 #partsModal .modal {
   width: min(760px, 90vw, 82dvh);
   height: min(760px, 90vw, 82dvh);
@@ -399,11 +315,6 @@ h1 {
   background: var(--theme-light);
 }
 
-/* 빈칸 선택 항목은 내부 표시 없이 흰색으로 유지 */
-.blank-option {
-  background: #ffffff;
-}
-
 .image-option img {
   width: 100%;
   height: 100%;
@@ -423,32 +334,20 @@ h1 {
   font-size: 14px;
 }
 
-/* =========================
-   반응형
-========================= */
 @media (max-width: 1000px) {
-  .parts-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
+  .parts-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 @media (max-width: 600px) {
-  body {
-    padding: 14px;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
+  body { padding: 14px; }
+  h1 { font-size: 22px; }
 
   .parts-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 
-  .part-title {
-    font-size: 12px;
-  }
+  .part-title { font-size: 12px; }
 
   #partsModal .modal {
     width: min(90vw, 82dvh);
@@ -470,10 +369,8 @@ h1 {
 
   <section class="character-area">
     <div class="character-list" id="characterList"></div>
-
     <div class="character-tools">
       <button class="btn btn-primary" id="addCharacterButton"></button>
-      <button class="btn" id="colorButton"></button>
       <button class="btn btn-danger" id="deleteCharacterButton"></button>
     </div>
   </section>
@@ -488,18 +385,14 @@ h1 {
 
 <!-- 캐릭터 추가 -->
 <div class="modal-overlay" id="addCharacterModal">
-  <section class="modal" role="dialog" aria-modal="true"
-           aria-labelledby="addModalTitle">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
     <h2 id="addModalTitle"></h2>
     <p class="modal-description" id="addModalDescription"></p>
     <form id="addCharacterForm">
-      <input class="modal-input" id="newCharacterName"
-             type="text" maxlength="80" required>
+      <input class="modal-input" id="newCharacterName" type="text" maxlength="80" required>
       <div class="modal-buttons">
-        <button type="button" class="btn" data-close="addCharacterModal"
-                id="addCancelButton"></button>
-        <button type="submit" class="btn btn-primary"
-                id="addConfirmButton"></button>
+        <button type="button" class="btn" data-close="addCharacterModal" id="addCancelButton"></button>
+        <button type="submit" class="btn btn-primary" id="addConfirmButton"></button>
       </div>
     </form>
   </section>
@@ -507,41 +400,22 @@ h1 {
 
 <!-- 캐릭터 삭제 확인 -->
 <div class="modal-overlay" id="deleteCharacterModal">
-  <section class="modal" role="dialog" aria-modal="true"
-           aria-labelledby="deleteModalTitle">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
     <h2 id="deleteModalTitle"></h2>
     <p class="modal-description" id="deleteModalDescription"></p>
     <div class="modal-buttons">
-      <button type="button" class="btn" data-close="deleteCharacterModal"
-              id="deleteCancelButton"></button>
-      <button type="button" class="btn btn-danger"
-              id="deleteConfirmButton"></button>
+      <button type="button" class="btn" data-close="deleteCharacterModal" id="deleteCancelButton"></button>
+      <button type="button" class="btn btn-danger" id="deleteConfirmButton"></button>
     </div>
   </section>
 </div>
 
-<!-- 캐릭터별 색상 변경 -->
-<div class="modal-overlay" id="colorModal">
-  <section class="modal" role="dialog" aria-modal="true"
-           aria-labelledby="colorModalTitle">
-    <h2 id="colorModalTitle"></h2>
-    <p class="modal-description" id="colorModalDescription"></p>
-    <div class="color-options" id="colorOptions"></div>
-    <div class="modal-buttons">
-      <button type="button" class="btn" data-close="colorModal"
-              id="colorCloseButton"></button>
-    </div>
-  </section>
-</div>
-
-<!-- 파츠 선택: 창 자체가 정사각형 -->
+<!-- 파츠 선택 -->
 <div class="modal-overlay" id="partsModal">
-  <section class="modal" role="dialog" aria-modal="true"
-           aria-labelledby="partsModalTitle">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="partsModalTitle">
     <header class="parts-modal-header">
       <h2 id="partsModalTitle"></h2>
-      <button type="button" class="close-btn"
-              data-close="partsModal" aria-label="닫기">×</button>
+      <button type="button" class="close-btn" data-close="partsModal" aria-label="닫기">×</button>
     </header>
     <div class="parts-modal-content">
       <div class="parts-options" id="partsOptions"></div>
@@ -550,14 +424,10 @@ h1 {
 </div>
 
 <script>
-/* =====================================================
-   TEXT: 화면에 표시되는 문구
-===================================================== */
 const TEXT = {
   pageTitle: "아이프리 마이캐릭터 도감",
   addCharacter: "캐릭터 추가",
   deleteCharacter: "캐릭터 삭제",
-  colorButton: "테마 색상",
   nameLabel: "이름",
   addModalTitle: "캐릭터 추가",
   addModalDescription: "추가할 캐릭터의 이름을 입력하세요.",
@@ -567,9 +437,6 @@ const TEXT = {
   deleteModalTitle: "캐릭터 삭제",
   deleteModalDescription: "이 캐릭터를 삭제하시겠습니까? 선택한 파츠 정보도 함께 삭제됩니다.",
   deleteConfirm: "삭제",
-  colorModalTitle: "테마 색상 변경",
-  colorModalDescription: "이 캐릭터에 적용할 색상을 선택하세요.",
-  colorClose: "닫기",
   choosePartTitle: "파츠 선택",
   noCharacter: "먼저 캐릭터를 추가해 주세요.",
   noPart: "아직 등록된 파츠가 없습니다.",
@@ -592,10 +459,10 @@ const TEXT = {
   }
 };
 
-/* =====================================================
-   PARTS: 파츠 이미지 목록
-   이미지 파일을 추가할 때 아래 목록에 등록하세요.
-===================================================== */
+/* 헤어 컬러와 메시 컬러가 공유하는 이미지 목록 */
+const SHARED_COLOR_PARTS = [];
+
+/* 파츠 이미지 목록 */
 const PARTS = {
   face: [
     { name: "おとめ", image: "images/parts/Face_0001.webp" },
@@ -611,10 +478,10 @@ const PARTS = {
   skin: [],
   bangs: [],
   backHair: [],
-  hairColor: [],
+  hairColor: SHARED_COLOR_PARTS,
   eyeColor: [],
   messageType: [],
-  messageColor: [],
+  messageColor: SHARED_COLOR_PARTS,
   hairDecoration: [],
   makeup: [],
   onePoint: [],
@@ -652,87 +519,22 @@ const PARTS = {
   ]
 };
 
-/* =====================================================
-   THEMES: 캐릭터별 색상 팔레트
-   색상을 더 추가하고 싶다면 이 목록을 편집하세요.
-===================================================== */
-const THEMES = [
-  {
-    name: "세이지",
-    main: "#a8c99b",
-    dark: "#527b48",
-    light: "#eef5e9",
-    text: "#263b27",
-    border: "#dce6d7"
-  },
-  {
-    name: "민트",
-    main: "#a9d8c2",
-    dark: "#3d8267",
-    light: "#edf8f2",
-    text: "#244738",
-    border: "#d6e9df"
-  },
-  {
-    name: "올리브",
-    main: "#c5cc91",
-    dark: "#747d38",
-    light: "#f5f6e8",
-    text: "#414525",
-    border: "#e4e5cc"
-  },
-  {
-    name: "포레스트",
-    main: "#8eb89b",
-    dark: "#38674b",
-    light: "#eaf3ed",
-    text: "#243c2c",
-    border: "#d2e2d7"
-  },
-  {
-    name: "라임",
-    main: "#c8dc8d",
-    dark: "#718d2f",
-    light: "#f5f9e8",
-    text: "#3c4b20",
-    border: "#e4ebce"
-  },
-  {
-    name: "청록",
-    main: "#91c8c0",
-    dark: "#3d7771",
-    light: "#eaf6f4",
-    text: "#234441",
-    border: "#d2e8e5"
-  },
-  {
-    name: "말차",
-    main: "#b7c8a3",
-    dark: "#647b4e",
-    light: "#f0f4e9",
-    text: "#35432b",
-    border: "#dfe6d4"
-  },
-  {
-    name: "딥그린",
-    main: "#8db4a0",
-    dark: "#315c48",
-    light: "#eaf2ed",
-    text: "#21392d",
-    border: "#d2e0d7"
-  }
-];
+/* 주얼을 선택하기 전의 기본 색상 */
+const DEFAULT_THEME = {
+  name: "기본",
+  main: "#e5e5e5",
+  dark: "#777777",
+  light: "#f7f7f7",
+  text: "#333333",
+  border: "#dddddd"
+};
 
 const categories = Object.keys(TEXT.categoryNames);
 let characters = [];
 let currentCharacterIndex = -1;
-let currentCategory = null;
 
 const $ = id => document.getElementById(id);
 
-/* =========================
-   초기 문구 설정
-========================= */
 function setText(id, text) {
   $(id).textContent = text;
 }
@@ -741,7 +543,6 @@ function initializeText() {
   setText("pageTitle", TEXT.pageTitle);
   setText("addCharacterButton", TEXT.addCharacter);
   setText("deleteCharacterButton", TEXT.deleteCharacter);
-  setText("colorButton", TEXT.colorButton);
   setText("nameLabel", TEXT.nameLabel);
 
   setText("addModalTitle", TEXT.addModalTitle);
@@ -754,15 +555,9 @@ function initializeText() {
   setText("deleteModalDescription", TEXT.deleteModalDescription);
   setText("deleteCancelButton", TEXT.cancel);
   setText("deleteConfirmButton", TEXT.deleteConfirm);
-
-  setText("colorModalTitle", TEXT.colorModalTitle);
-  setText("colorModalDescription", TEXT.colorModalDescription);
-  setText("colorCloseButton", TEXT.colorClose);
 }
 
-/* =========================
-   모달 열기 / 닫기
-========================= */
+/* 모달 열기 / 닫기 */
 function openModal(id) {
   $(id).classList.add("is-open");
 }
@@ -778,9 +573,7 @@ function closeAllModals() {
 }
 
 document.querySelectorAll("[data-close]").forEach(button => {
-  button.addEventListener("click", () => {
-    closeModal(button.dataset.close);
-  });
+  button.addEventListener("click", () => closeModal(button.dataset.close));
 });
 
 document.querySelectorAll(".modal-overlay").forEach(overlay => {
@@ -795,22 +588,14 @@ document.addEventListener("keydown", event => {
   if (event.key === "Escape") closeAllModals();
 });
 
-/* =========================
-   캐릭터별 테마 적용
-========================= */
+/* 주얼에 따른 테마 적용 */
 function getThemeForCharacter(character) {
-  if (!character) return THEMES[0];
-
-  // 주얼이 선택되어 있으면 주얼에 연결된 테마색을 우선 적용합니다.
-  const selectedJewelry = character.parts?.jewelry;
-  if (selectedJewelry?.theme) return selectedJewelry.theme;
-
-  const themeIndex = character.themeIndex ?? 0;
-  return THEMES[themeIndex] || THEMES[0];
+  if (!character) return DEFAULT_THEME;
+  return character.parts?.jewelry?.theme || DEFAULT_THEME;
 }
 
 function getCurrentTheme() {
-  if (currentCharacterIndex < 0) return THEMES[0];
+  if (currentCharacterIndex < 0) return DEFAULT_THEME;
   return getThemeForCharacter(characters[currentCharacterIndex]);
 }
 
@@ -825,9 +610,7 @@ function applyTheme() {
   root.style.setProperty("--border", theme.border);
 }
 
-/* =========================
-   캐릭터 버튼 목록
-========================= */
+/* 캐릭터 버튼 목록 */
 function renderCharacters() {
   const list = $("characterList");
   list.replaceChildren();
@@ -838,7 +621,6 @@ function renderCharacters() {
     button.className = "character-button";
     button.textContent = character.name;
 
-    // 각 캐릭터 버튼도 해당 캐릭터의 주얼 테마색을 사용합니다.
     const characterTheme = getThemeForCharacter(character);
     button.style.backgroundColor = index === currentCharacterIndex
       ? characterTheme.main
@@ -865,19 +647,15 @@ function renderCharacters() {
   });
 
   $("deleteCharacterButton").disabled = currentCharacterIndex < 0;
-  $("colorButton").disabled = currentCharacterIndex < 0;
 }
 
 function renderName() {
-  $("characterName").textContent =
-    currentCharacterIndex >= 0
-      ? characters[currentCharacterIndex].name
-      : TEXT.noCharacter;
+  $("characterName").textContent = currentCharacterIndex >= 0
+    ? characters[currentCharacterIndex].name
+    : TEXT.noCharacter;
 }
 
-/* =========================
-   캐릭터 추가
-========================= */
+/* 캐릭터 추가 */
 $("addCharacterButton").addEventListener("click", () => {
   $("newCharacterName").value = "";
   openModal("addCharacterModal");
@@ -895,11 +673,11 @@ $("addCharacterForm").addEventListener("submit", event => {
 
   characters.push({
     name,
-    themeIndex: 0,
     parts: {}
   });
 
   currentCharacterIndex = characters.length - 1;
+
   closeModal("addCharacterModal");
   applyTheme();
   renderCharacters();
@@ -907,9 +685,7 @@ $("addCharacterForm").addEventListener("submit", event => {
   renderParts();
 });
 
-/* =========================
-   캐릭터 삭제
-========================= */
+/* 캐릭터 삭제 */
 $("deleteCharacterButton").addEventListener("click", () => {
   if (currentCharacterIndex < 0) return;
   openModal("deleteCharacterModal");
@@ -930,59 +706,7 @@ $("deleteConfirmButton").addEventListener("click", () => {
   renderParts();
 });
 
-/* =========================
-   캐릭터별 색상 선택
-========================= */
-function renderColorOptions() {
-  const container = $("colorOptions");
-  container.replaceChildren();
-
-  const selectedTheme = getCurrentTheme();
-
-  THEMES.forEach((theme, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "color-option";
-
-    if (theme.name === selectedTheme.name) {
-      button.classList.add("selected");
-      button.setAttribute("aria-pressed", "true");
-    } else {
-      button.setAttribute("aria-pressed", "false");
-    }
-
-    const swatch = document.createElement("span");
-    swatch.className = "color-swatch";
-    swatch.style.backgroundColor = theme.main;
-
-    const label = document.createElement("span");
-    label.textContent = theme.name;
-
-    button.append(swatch, label);
-
-    button.addEventListener("click", () => {
-      if (currentCharacterIndex < 0) return;
-
-      characters[currentCharacterIndex].themeIndex = index;
-      applyTheme();
-      renderCharacters();
-      renderColorOptions();
-    });
-
-    container.appendChild(button);
-  });
-}
-
-$("colorButton").addEventListener("click", () => {
-  if (currentCharacterIndex < 0) return;
-  renderColorOptions();
-  openModal("colorModal");
-});
-
-/* =========================
-   파츠 그리드
-   이미지 칸을 클릭하면 선택 창이 열립니다.
-========================= */
+/* 파츠 그리드 */
 function renderParts() {
   const grid = $("partsGrid");
   grid.replaceChildren();
@@ -999,67 +723,59 @@ function renderParts() {
     const preview = document.createElement("button");
     preview.type = "button";
     preview.className = "part-preview";
-    preview.disabled = currentCharacterIndex < 0;
     preview.title = TEXT.choosePartTitle;
-    preview.setAttribute("aria-label", TEXT.categoryNames[category] + " - " + TEXT.choosePartTitle);
+    preview.setAttribute(
+      "aria-label",
+      TEXT.categoryNames[category] + " - " + TEXT.choosePartTitle
+    );
 
     const selected = currentCharacterIndex >= 0
       ? characters[currentCharacterIndex].parts[category]
       : null;
 
-    if (selected && selected.none !== true) {
+    if (selected) {
       const image = document.createElement("img");
       image.src = selected.image;
       image.alt = selected.name;
       preview.appendChild(image);
-    } else if (!(selected && selected.none === true)) {
+    } else {
       const placeholder = document.createElement("span");
       placeholder.className = "part-placeholder";
-      placeholder.textContent = "+";
+      placeholder.textContent = currentCharacterIndex < 0 ? "—" : "+";
       placeholder.style.fontSize = "24px";
       preview.appendChild(placeholder);
     }
 
     preview.addEventListener("click", () => {
-      if (currentCharacterIndex >= 0) openPartsModal(category);
+      if (currentCharacterIndex < 0) {
+        $("newCharacterName").value = "";
+        openModal("addCharacterModal");
+        $("newCharacterName").focus();
+        return;
+      }
+
+      openPartsModal(category);
     });
 
     card.appendChild(preview);
 
     const partName = document.createElement("div");
     partName.className = "part-name";
-    partName.textContent = selected && selected.none !== true ? selected.name : " ";
+    partName.textContent = selected ? selected.name : " ";
     card.appendChild(partName);
+
     grid.appendChild(card);
   });
 }
 
-/* =========================
-   파츠 선택 모달
-========================= */
+/* 파츠 선택 모달 */
 function openPartsModal(category) {
   if (currentCharacterIndex < 0) return;
 
-  currentCategory = category;
   $("partsModalTitle").textContent = TEXT.categoryNames[category];
 
   const options = $("partsOptions");
   options.replaceChildren();
-
-  // 빈칸 항목: 선택하면 해당 파츠를 적용하지 않는 상태로 저장합니다.
-  const blankButton = document.createElement("button");
-  blankButton.type = "button";
-  blankButton.className = "image-option blank-option";
-  blankButton.title = "파츠 없음 (적용하지 않음)";
-  blankButton.setAttribute("aria-label", "파츠 없음 (적용하지 않음)");
-  blankButton.addEventListener("click", () => {
-    characters[currentCharacterIndex].parts[category] = { none: true, name: "", image: "" };
-    closeModal("partsModal");
-    applyTheme();
-    renderCharacters();
-    renderParts();
-  });
-  options.appendChild(blankButton);
 
   const clearButton = document.createElement("button");
   clearButton.type = "button";
@@ -1103,10 +819,7 @@ function openPartsModal(category) {
     image.alt = part.name;
     image.loading = "lazy";
 
-    image.addEventListener("error", () => {
-      button.remove();
-    });
-
+    image.addEventListener("error", () => button.remove());
     button.appendChild(image);
 
     button.addEventListener("click", () => {
@@ -1123,9 +836,7 @@ function openPartsModal(category) {
   openModal("partsModal");
 }
 
-/* =========================
-   실행
-========================= */
+/* 실행 */
 initializeText();
 applyTheme();
 renderCharacters();
