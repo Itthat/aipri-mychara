@@ -53,8 +53,12 @@ h1 {
 .character-list {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   gap: 8px;
+  height: 92px;
+  overflow-y: auto;
   margin-bottom: 12px;
+  padding: 2px;
 }
 
 .character-button {
@@ -168,7 +172,7 @@ h1 {
   transition: background 0.15s;
 }
 
-.part-preview:hover:not(:disabled) { background: var(--theme-light); }
+.part-preview:hover { background: var(--theme-light); }
 
 .part-preview img {
   width: 100%;
@@ -455,6 +459,9 @@ const TEXT = {
   }
 };
 
+/* 헤어 컬러와 메시 컬러가 공유하는 이미지 목록 */
+const SHARED_COLOR_PARTS = [];
+
 /* 파츠 이미지 목록 */
 const PARTS = {
   face: [
@@ -471,10 +478,10 @@ const PARTS = {
   skin: [],
   bangs: [],
   backHair: [],
-  hairColor: [],
+  hairColor: SHARED_COLOR_PARTS,
   eyeColor: [],
   messageType: [],
-  messageColor: [],
+  messageColor: SHARED_COLOR_PARTS,
   hairDecoration: [],
   makeup: [],
   onePoint: [],
@@ -512,7 +519,7 @@ const PARTS = {
   ]
 };
 
-/* 주얼을 선택하기 전의 중립 색상 */
+/* 주얼을 선택하기 전의 기본 색상 */
 const DEFAULT_THEME = {
   name: "기본",
   main: "#e5e5e5",
@@ -584,11 +591,7 @@ document.addEventListener("keydown", event => {
 /* 주얼에 따른 테마 적용 */
 function getThemeForCharacter(character) {
   if (!character) return DEFAULT_THEME;
-
-  const selectedJewelry = character.parts?.jewelry;
-  if (selectedJewelry?.theme) return selectedJewelry.theme;
-
-  return DEFAULT_THEME;
+  return character.parts?.jewelry?.theme || DEFAULT_THEME;
 }
 
 function getCurrentTheme() {
@@ -668,7 +671,11 @@ $("addCharacterForm").addEventListener("submit", event => {
     return;
   }
 
-  characters.push({ name, parts: {} });
+  characters.push({
+    name,
+    parts: {}
+  });
+
   currentCharacterIndex = characters.length - 1;
 
   closeModal("addCharacterModal");
@@ -716,7 +723,6 @@ function renderParts() {
     const preview = document.createElement("button");
     preview.type = "button";
     preview.className = "part-preview";
-    preview.disabled = currentCharacterIndex < 0;
     preview.title = TEXT.choosePartTitle;
     preview.setAttribute(
       "aria-label",
@@ -740,7 +746,17 @@ function renderParts() {
       preview.appendChild(placeholder);
     }
 
-    preview.addEventListener("click", () => openPartsModal(category));
+    preview.addEventListener("click", () => {
+      if (currentCharacterIndex < 0) {
+        $("newCharacterName").value = "";
+        openModal("addCharacterModal");
+        $("newCharacterName").focus();
+        return;
+      }
+
+      openPartsModal(category);
+    });
+
     card.appendChild(preview);
 
     const partName = document.createElement("div");
