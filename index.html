@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>마이캐릭터 파츠 정리</title>
 
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500&family=Jua&display=swap" rel="stylesheet">
+
 <style>
 :root {
   --theme: #e5e5e5;
@@ -16,7 +18,6 @@
   --subtext: #858d81;
   --background: #ffffff;
 }
-
 * { box-sizing: border-box; }
 
 body {
@@ -24,7 +25,7 @@ body {
   padding: 24px;
   background: var(--background);
   color: var(--text);
-  font-family: Arial, "Malgun Gothic", sans-serif;
+  font-family: "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif;
 }
 
 button, input { font: inherit; }
@@ -59,10 +60,12 @@ h1 {
   align-items: center;
   margin-bottom: 20px;
 }
+
 #pageTitle {
   grid-area: title;
   white-space: pre-line;
   text-align: left;
+  font-family: "Jua", sans-serif;
 }
 
 .character-list {
@@ -78,6 +81,7 @@ h1 {
   margin: 0;
   padding: 2px;
 }
+
 .character-button {
   padding: 5px 10px;
   font-size: 13px;
@@ -88,7 +92,6 @@ h1 {
   overflow-wrap: anywhere;
   transition: background 0.15s, border-color 0.15s;
 }
-
 .character-button:hover { background: var(--theme-light); }
 
 .character-button.active {
