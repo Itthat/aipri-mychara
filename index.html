@@ -62,7 +62,8 @@ h1 {
 }
 
 .character-button {
-  padding: 10px 16px;
+  padding: 5px 10px;
+  font-size: 13px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: white;
@@ -543,7 +544,6 @@ function initializeText() {
   setText("pageTitle", TEXT.pageTitle);
   setText("addCharacterButton", TEXT.addCharacter);
   setText("deleteCharacterButton", TEXT.deleteCharacter);
-  setText("nameLabel", TEXT.nameLabel);
 
   setText("addModalTitle", TEXT.addModalTitle);
   setText("addModalDescription", TEXT.addModalDescription);
@@ -650,9 +650,10 @@ function renderCharacters() {
 }
 
 function renderName() {
-  $("characterName").textContent = currentCharacterIndex >= 0
-    ? characters[currentCharacterIndex].name
-    : TEXT.noCharacter;
+  $("characterName").textContent =
+    currentCharacterIndex >= 0
+      ? characters[currentCharacterIndex].name
+      : "";
 }
 
 /* 캐릭터 추가 */
