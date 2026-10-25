@@ -790,62 +790,9 @@ function openPartsModal(category) {
   const options = $("partsOptions");
   options.replaceChildren();
 
-  // 파츠 없음: 선택하면 화면에 아무것도 표시하지 않습니다.
-  const blankButton = document.createElement("button");
-  blankButton.type = "button";
-  blankButton.className = "image-option";
-  blankButton.title = "파츠 없음 (적용하지 않음)";
-  blankButton.setAttribute(
-    "aria-label",
-    "파츠 없음 (적용하지 않음)"
-  );
-
-  blankButton.addEventListener("click", () => {
-    characters[currentCharacterIndex].parts[category] = {
-      none: true,
-      name: "",
-      image: ""
-    };
-
-    closeModal("partsModal");
-    applyTheme();
-    renderCharacters();
-    renderParts();
-  });
-
-  options.appendChild(blankButton);
-
-  // 파츠 미선택으로 되돌리는 버튼
-  const clearButton = document.createElement("button");
-  clearButton.type = "button";
-  clearButton.className = "image-option";
-  clearButton.title = "선택 해제";
-  clearButton.setAttribute("aria-label", "선택 해제");
-
-  const clearText = document.createElement("span");
-  clearText.className = "clear-option";
-  clearText.textContent = "×";
-  clearButton.appendChild(clearText);
-
-  clearButton.addEventListener("click", () => {
-    characters[currentCharacterIndex].parts[category] = null;
-    closeModal("partsModal");
-    applyTheme();
-    renderCharacters();
-    renderParts();
-  });
-
-  options.appendChild(clearButton);
-
   const parts = PARTS[category] || [];
 
-  if (parts.length === 0) {
-    const empty = document.createElement("div");
-    empty.className = "parts-empty";
-    empty.textContent = TEXT.noPart;
-    options.appendChild(empty);
-  }
-
+  // 1. 파츠 이미지 목록을 먼저 표시
   parts.forEach(part => {
     const button = document.createElement("button");
     button.type = "button";
@@ -872,9 +819,64 @@ function openPartsModal(category) {
     options.appendChild(button);
   });
 
+  // 2. 파츠 없음: 화면에 완전히 빈칸으로 표시
+  const blankButton = document.createElement("button");
+  blankButton.type = "button";
+  blankButton.className = "image-option";
+  blankButton.title = "파츠 없음 (적용하지 않음)";
+  blankButton.setAttribute(
+    "aria-label",
+    "파츠 없음 (적용하지 않음)"
+  );
+
+  blankButton.addEventListener("click", () => {
+    characters[currentCharacterIndex].parts[category] = {
+      none: true,
+      name: "",
+      image: ""
+    };
+
+    closeModal("partsModal");
+    applyTheme();
+    renderCharacters();
+    renderParts();
+  });
+
+  options.appendChild(blankButton);
+
+  // 3. X: 파츠 미선택 상태로 되돌리기
+  const clearButton = document.createElement("button");
+  clearButton.type = "button";
+  clearButton.className = "image-option";
+  clearButton.title = "선택 해제";
+  clearButton.setAttribute("aria-label", "선택 해제");
+
+  const clearText = document.createElement("span");
+  clearText.className = "clear-option";
+  clearText.textContent = "×";
+  clearButton.appendChild(clearText);
+
+  clearButton.addEventListener("click", () => {
+    characters[currentCharacterIndex].parts[category] = null;
+    closeModal("partsModal");
+    applyTheme();
+    renderCharacters();
+    renderParts();
+  });
+
+  options.appendChild(clearButton);
+
+  // 등록된 이미지가 없을 때 안내 문구 표시
+  if (parts.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "parts-empty";
+    empty.textContent = TEXT.noPart;
+    options.insertBefore(empty, blankButton);
+  }
+
   openModal("partsModal");
 }
-
+  
 /* 실행 */
 initializeText();
 applyTheme();
