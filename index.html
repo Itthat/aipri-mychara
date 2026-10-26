@@ -405,10 +405,11 @@ h1 {
 }
 .preview-caption { margin: 9px 0 0; color: var(--subtext); font-size: 11px; line-height: 1.5; }
 .parts-panel { min-width: 0; }
-.parts-panel .parts-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.parts-panel .parts-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.parts-panel .parts-grid > .part-card:nth-child(4) { grid-column-start: 1; }
 
 @media (max-width: 1000px) {
-  .parts-panel .parts-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .parts-panel .parts-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 @media (max-width: 600px) {
@@ -424,7 +425,7 @@ h1 {
   .editor-layout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .preview-panel { position: static; }
   .character-preview { max-height: 420px; margin: 0 auto; }
-  .parts-panel .parts-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .parts-panel .parts-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 
   .part-title { font-size: 12px; }
 
@@ -464,7 +465,7 @@ h1 {
       <div class="character-preview" id="characterPreview" aria-label="선택한 파츠 미리보기">
         <div class="preview-empty" id="previewEmpty">캐릭터를 추가한 뒤 파츠를 선택해 주세요.</div>
       </div>
-      <p class="preview-caption">미리보기 이미지로, 실제 인게 적용 이미지는 다를 수 있습니다.</p>
+      <p class="preview-caption">미리보기 이미지로, 실제 인게임 적용 이미지는 다를 수 있습니다.</p>
     </aside>
     <div class="parts-panel">
       <main class="parts-grid" id="partsGrid"></main>
@@ -534,6 +535,7 @@ const TEXT = {
   categoryNames: {
     face: "얼굴",
     voice: "보이스",
+    jewelry: "부탁해 주얼",
     skin: "피부",
     bangs: "앞머리",
     backHair: "뒷머리",
@@ -543,8 +545,7 @@ const TEXT = {
     messageColor: "메시 컬러",
     hairDecoration: "헤어 데코",
     makeup: "메이크업",
-    onePoint: "원 포인트",
-    jewelry: "부탁해 주얼"
+    onePoint: "원 포인트"
   }
 };
 
@@ -659,6 +660,38 @@ const PARTS = {
     { name: "クール", image: "images/parts/Voice_0104.webp" },
     { name: "ゆうが", image: "images/parts/Voice_0105.webp" },
     { name: "かわいい", image: "images/parts/Voice_0106.webp" }
+  ],
+  jewelry: [
+    {
+      name: "すき",
+      image: "images/parts/Jewel_0001.webp",
+      theme: { name: "すき", main: "#F9D8EB", dark: "#B52D78", light: "#FFF0F8", text: "#642044", border: "#EFC0DC" }
+    },
+    {
+      name: "ゆめ",
+      image: "images/parts/Jewel_0002.webp",
+      theme: { name: "ゆめ", main: "#D6F2FA", dark: "#2187A8", light: "#EFFBFE", text: "#174B5D", border: "#B6E4F0" }
+    },
+    {
+      name: "ゆうじょう",
+      image: "images/parts/Jewel_0003.webp",
+      theme: { name: "ゆうじょう", main: "#DDF5D9", dark: "#398A47", light: "#F1FBEF", text: "#254D2B", border: "#C2E8BD" }
+    },
+    {
+      name: "ゆうき",
+      image: "images/parts/Jewel_0004.webp",
+      theme: { name: "ゆうき", main: "#FFF2C2", dark: "#A88417", light: "#FFFAE8", text: "#5B4912", border: "#F0E0A0" }
+    },
+    {
+      name: "じょうねつ",
+      image: "images/parts/Jewel_0005.webp",
+      theme: { name: "じょうねつ", main: "#F9D7DC", dark: "#B8243B", light: "#FFF0F2", text: "#651C2A", border: "#F0B9C2" }
+    },
+    {
+      name: "きぼう",
+      image: "images/parts/Jewel_0006.webp",
+      theme: { name: "きぼう", main: "#E9DDFB", dark: "#7040B4", light: "#F7F1FF", text: "#402568", border: "#D4C0F3" }
+    }
   ],
   skin: [
     { name: "A", image: "images/parts/Skin_0001.webp" },
@@ -1008,38 +1041,7 @@ const PARTS = {
     { name: "ぐみぐみシール", image: "images/parts/Onepoint_0024.webp" },
     { name: "ゴシックハートアイパッチ", image: "images/parts/Onepoint_0025.webp" }
   ],
-  jewelry: [
-    {
-      name: "すき",
-      image: "images/parts/Jewel_0001.webp",
-      theme: { name: "すき", main: "#F9D8EB", dark: "#B52D78", light: "#FFF0F8", text: "#642044", border: "#EFC0DC" }
-    },
-    {
-      name: "ゆめ",
-      image: "images/parts/Jewel_0002.webp",
-      theme: { name: "ゆめ", main: "#D6F2FA", dark: "#2187A8", light: "#EFFBFE", text: "#174B5D", border: "#B6E4F0" }
-    },
-    {
-      name: "ゆうじょう",
-      image: "images/parts/Jewel_0003.webp",
-      theme: { name: "ゆうじょう", main: "#DDF5D9", dark: "#398A47", light: "#F1FBEF", text: "#254D2B", border: "#C2E8BD" }
-    },
-    {
-      name: "ゆうき",
-      image: "images/parts/Jewel_0004.webp",
-      theme: { name: "ゆうき", main: "#FFF2C2", dark: "#A88417", light: "#FFFAE8", text: "#5B4912", border: "#F0E0A0" }
-    },
-    {
-      name: "じょうねつ",
-      image: "images/parts/Jewel_0005.webp",
-      theme: { name: "じょうねつ", main: "#F9D7DC", dark: "#B8243B", light: "#FFF0F2", text: "#651C2A", border: "#F0B9C2" }
-    },
-    {
-      name: "きぼう",
-      image: "images/parts/Jewel_0006.webp",
-      theme: { name: "きぼう", main: "#E9DDFB", dark: "#7040B4", light: "#F7F1FF", text: "#402568", border: "#D4C0F3" }
-    }
-  ]
+
 };
 
 /* 주얼을 선택하기 전의 기본 색상 */
@@ -1052,7 +1054,12 @@ const DEFAULT_THEME = {
   border: "#dddddd"
 };
 
-const categories = Object.keys(TEXT.categoryNames);
+// 화면에 표시할 파츠 카테고리 순서
+const categories = [
+  "face", "voice", "jewelry",
+  "skin", "bangs", "backHair", "hairColor", "eyeColor",
+  "messageType", "messageColor", "hairDecoration", "makeup", "onePoint"
+];
 let characters = [];
 let currentCharacterIndex = -1;
 
@@ -1232,37 +1239,8 @@ $("deleteConfirmButton").addEventListener("click", () => {
 /* 선택된 시각 파츠를 미리보기 영역에 겹쳐 표시 */
 const PREVIEW_LAYER_ORDER = ["backHair", "skin", "face", "bangs", "hairDecoration", "makeup", "onePoint", "jewelry"];
 function renderCharacterPreview() {
-  const preview = $("characterPreview");
-  preview.replaceChildren();
-  if (currentCharacterIndex < 0) {
-    const empty = document.createElement("div");
-    empty.className = "preview-empty";
-    empty.textContent = "캐릭터를 추가한 뒤 파츠를 선택해 주세요.";
-    preview.appendChild(empty);
-    return;
-  }
-
-  const character = characters[currentCharacterIndex];
-  let count = 0;
-  PREVIEW_LAYER_ORDER.forEach(category => {
-    const selected = character.parts?.[category];
-    if (!selected || selected.none || !selected.image) return;
-    const image = document.createElement("img");
-    image.className = "preview-layer";
-    image.src = selected.image;
-    image.alt = selected.name || TEXT.categoryNames[category];
-    image.dataset.category = category;
-    image.style.zIndex = String(PREVIEW_LAYER_ORDER.indexOf(category) + 1);
-    image.addEventListener("error", () => image.remove());
-    preview.appendChild(image);
-    count++;
-  });
-  if (!count) {
-    const empty = document.createElement("div");
-    empty.className = "preview-empty";
-    empty.textContent = "선택한 파츠가 여기에 표시됩니다.";
-    preview.appendChild(empty);
-  }
+  // 미리보기 영역의 크기와 디자인은 유지하고, 선택한 파츠 이미지는 표시하지 않습니다.
+  $("characterPreview").replaceChildren();
 }
 
 /* 파츠 그리드 */
