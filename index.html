@@ -1251,10 +1251,12 @@ async function exportCharacterImage() {
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
   const characterName = character.name || "이름 없는 캐릭터";
 
-  // Jua 웹폰트가 실제로 준비될 때까지 기다린 뒤 캐릭터 이름을 그립니다.
-  // 시간 제한이나 대체 폰트 전환을 두지 않아, 늦게 로드되더라도 Jua로 출력합니다.
+  // 캔버스에 사용할 웹폰트가 모두 준비될 때까지 기다립니다.
+  // 캐릭터 이름은 Jua, 파츠 분류명은 IBM Plex Sans KR을 사용합니다.
+  // 로딩 시간 제한이나 임의의 대체 폰트 전환은 두지 않습니다.
   if (document.fonts && document.fonts.load) {
     await document.fonts.load('42px "Jua"', characterName);
+    await document.fonts.load('bold 18px "IBM Plex Sans KR"', '피부 헤어 데코 메이크업 부탁해 주얼');
     await document.fonts.ready;
   }
   ctx.font = '42px "Jua", sans-serif';
