@@ -1467,42 +1467,16 @@ $("deleteConfirmButton").addEventListener("click", () => {
   renderParts();
 });
 
-/* 선택된 시각 파츠를 미리보기 영역에 겹쳐 표시 */
-const PREVIEW_LAYER_ORDER = ["backHair", "skin", "face", "bangs", "hairDecoration", "makeup", "onePoint", "jewelry"];
+/* 캐릭터 미리보기 영역에는 파츠 썸네일을 겹쳐 표시하지 않습니다. */
 function renderCharacterPreview() {
   const preview = $("characterPreview");
   preview.replaceChildren();
-
-  if (currentCharacterIndex < 0 || !characters[currentCharacterIndex]) {
-    const empty = document.createElement("div");
-    empty.className = "preview-empty";
-    empty.textContent = "캐릭터를 추가한 뒤 파츠를 선택해 주세요.";
-    preview.appendChild(empty);
-    return;
-  }
-
-  const character = characters[currentCharacterIndex];
-  let hasVisiblePart = false;
-  PREVIEW_LAYER_ORDER.forEach(category => {
-    const part = character.parts && character.parts[category];
-    if (!part || part.none === true || !part.image) return;
-
-    const image = document.createElement("img");
-    image.className = "preview-layer";
-    image.src = part.image;
-    image.alt = part.name || TEXT.categoryNames[category] || category;
-    image.loading = "eager";
-    image.addEventListener("error", () => image.remove());
-    preview.appendChild(image);
-    hasVisiblePart = true;
-  });
-
-  if (!hasVisiblePart) {
-    const empty = document.createElement("div");
-    empty.className = "preview-empty";
-    empty.textContent = "파츠를 선택하면 여기에 미리보기가 표시됩니다.";
-    preview.appendChild(empty);
-  }
+  const empty = document.createElement("div");
+  empty.className = "preview-empty";
+  empty.textContent = currentCharacterIndex < 0 || !characters[currentCharacterIndex]
+    ? "캐릭터를 추가한 뒤 파츠를 선택해 주세요."
+    : "미리보기 이미지는 별도로 제공되지 않습니다.";
+  preview.appendChild(empty);
 }
 
 /* 파츠 그리드 */
