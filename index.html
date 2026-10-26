@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>마이캐릭터 파츠 정리</title>
 
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500&family=Jua&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -1247,10 +1247,19 @@ async function exportCharacterImage() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#333333";
-  ctx.font = "500 42px 'IBM Plex Sans KR', 'IBM Plex Sans JP', sans-serif";
   ctx.textAlign = "center";
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
-  ctx.fillText(character.name || "이름 없는 캐릭터", previewBox.x + previewBox.w / 2, 62, previewBox.w);
+  const characterName = character.name || "이름 없는 캐릭터";
+
+  // Jua 웹폰트가 실제로 준비될 때까지 기다린 뒤 캐릭터 이름을 그립니다.
+  // 시간 제한이나 대체 폰트 전환을 두지 않아, 늦게 로드되더라도 Jua로 출력합니다.
+  if (document.fonts && document.fonts.load) {
+    await document.fonts.load('42px "Jua"', characterName);
+    await document.fonts.ready;
+  }
+  ctx.font = '42px "Jua", sans-serif';
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText(characterName, previewBox.x + previewBox.w / 2, 62, previewBox.w);
   // 이후 텍스트도 모두 가운데 정렬합니다.
 
   const omitPreview = $("omitPreviewCheckbox").checked;
@@ -1317,8 +1326,18 @@ async function exportCharacterImage() {
       if (part && part.none !== true && part.image) {
         try {
           const img = new Image();
+          // 캐시된 이미지에서는 src 지정 직후 이미 로드가 끝날 수 있으므로,
+          // complete 상태도 확인해 간헐적으로 이미지가 빠지는 현상을 방지합니다.
+          const imageReady = new Promise((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => reject(new Error("파츠 이미지를 불러오지 못했습니다."));
+          });
           img.src = part.image;
-          await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+          if (!img.complete) {
+            await imageReady;
+          } else if (img.naturalWidth === 0) {
+            await imageReady;
+          }
           // 파츠 명칭은 내보내지 않으므로 이미지에 더 많은 공간을 줍니다.
           const maxW = cellW - 20, maxH = 188;
           const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
