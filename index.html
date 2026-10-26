@@ -1242,10 +1242,12 @@ async function exportCharacterImage() {
 
   ctx.fillStyle = "#303a30";
   ctx.font = "bold 42px 'Jua', sans-serif";
-  ctx.fillText(character.name || "이름 없는 캐릭터", 48, 62, 850);
+  ctx.textAlign = "center";
+  const previewBox = { x: 48, y: 100, w: 390, h: 390 };
+  ctx.fillText(character.name || "이름 없는 캐릭터", previewBox.x, 62, previewBox.w);
+  // 이후 텍스트도 모두 가운데 정렬합니다.
 
   const omitPreview = $("omitPreviewCheckbox").checked;
-  const previewBox = { x: 48, y: 100, w: 390, h: 390 };
   const roundedRect = (x, y, w, h, r) => {
     ctx.beginPath();
     ctx.roundRect(x, y, w, h, r);
@@ -1265,7 +1267,8 @@ async function exportCharacterImage() {
     ctx.stroke();
     ctx.fillStyle = "#858d81";
     ctx.font = "18px 'IBM Plex Sans KR', sans-serif";
-    ctx.fillText("미리보기 이미지 없음", previewBox.x + 75, previewBox.y + previewBox.h / 2);
+    ctx.textAlign = "center";
+    ctx.fillText("미리보기 이미지 없음", previewBox.x + previewBox.w / 2, previewBox.y + previewBox.h / 2);
   }
 
   // 선택하지 않은 파츠도 빠뜨리지 않고 모든 카테고리를 내보냅니다.
@@ -1286,22 +1289,25 @@ async function exportCharacterImage() {
       ctx.fill();
       ctx.strokeStyle = "#dddddd";
       ctx.stroke();
+      // 파츠 칸 안의 글자는 중앙 정렬합니다.
       ctx.fillStyle = "#303a30";
       ctx.font = "bold 18px 'IBM Plex Sans KR', sans-serif";
-      ctx.fillText(TEXT.categoryNames[category] || category, x + 12, y + 28, cellW - 24);
+      ctx.textAlign = "center";
+      ctx.fillText(TEXT.categoryNames[category] || category, x + cellW / 2, y + 28, cellW - 24);
 
       if (part && part.none !== true && part.image) {
         try {
           const img = new Image();
           img.src = part.image;
           await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-          const maxW = cellW - 28, maxH = 145;
+          // 파츠 명칭은 내보내지 않으므로 이미지에 더 많은 공간을 줍니다.
+          const maxW = cellW - 20, maxH = 188;
           const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
           const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
           ctx.save();
           roundedRect(x, y, cellW, cellH, 18);
           ctx.clip();
-          ctx.drawImage(img, x + (cellW - w) / 2, y + 40 + (maxH - h) / 2, w, h);
+          ctx.drawImage(img, x + (cellW - w) / 2, y + 34 + (maxH - h) / 2, w, h);
           ctx.restore();
         } catch (e) { /* 이미지 로딩 실패 시에도 카테고리와 이름 칸은 유지 */ }
       }
