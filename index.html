@@ -51,31 +51,34 @@ h1 {
 
 .character-area {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(0, 2fr);
+  width: 76%;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "title list"
-    ". tools";
-  column-gap: 20px;
-  row-gap: 12px;
+    "header"
+    "list";
+  column-gap: 0;
+  row-gap: 6px;
   align-items: center;
   margin-bottom: 20px;
 }
 
+.character-header { grid-area: header; display: flex; align-items: center; justify-content: flex-start; gap: 16px; min-width: 0; }
+
 #pageTitle {
-  grid-area: title;
-  white-space: pre-line;
+  white-space: nowrap;
   text-align: left;
   font-family: "Jua", sans-serif;
+  font-size: 22px;
 }
 
 .character-list {
   grid-area: list;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-content: flex-start;
   gap: 8px;
-  height: 92px;
+  height: 60px;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0;
@@ -102,9 +105,8 @@ h1 {
 }
 
 .character-tools {
-  grid-area: tools;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -432,11 +434,10 @@ h1 {
 @media (max-width: 600px) {
   body { padding: 14px; }
   h1 { font-size: 22px; }
-  .character-area {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    column-gap: 10px;
-  }
-  .character-list { height: 92px; }
+  .character-area { width: 100%; }
+  .character-header { gap: 8px; flex-wrap: nowrap; }
+  #pageTitle { font-size: 20px; }
+  .character-list { height: 60px; }
   .character-button { max-width: 100%; }
 
   .editor-layout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
@@ -463,12 +464,14 @@ h1 {
 <body>
 <div class="page">
   <section class="character-area">
-    <h1 id="pageTitle"></h1>
-    <div class="character-list" id="characterList"></div>
-    <div class="character-tools">
-      <button class="btn btn-primary" id="addCharacterButton"></button>
-      <button class="btn btn-danger" id="deleteCharacterButton"></button>
+    <div class="character-header">
+      <h1 id="pageTitle"></h1>
+      <div class="character-tools">
+        <button class="btn btn-primary" id="addCharacterButton"></button>
+        <button class="btn btn-danger" id="deleteCharacterButton"></button>
+      </div>
     </div>
+    <div class="character-list" id="characterList"></div>
   </section>
 
   <section class="name-area">
@@ -548,7 +551,7 @@ h1 {
 
 <script>
 const TEXT = {
-  pageTitle: "마이캐릭터\n파츠 정리",
+  pageTitle: "저장된 캐릭터 목록",
   addCharacter: "추가",
   deleteCharacter: "삭제",
   nameLabel: "이름",
