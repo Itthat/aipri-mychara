@@ -1063,6 +1063,30 @@ const categories = [
 let characters = [];
 let currentCharacterIndex = -1;
 
+// 새로고침 후에도 캐릭터와 선택한 파츠를 유지합니다.
+const SAVE_KEY = "aipriMyCharaState_v1";
+function saveState() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ characters, currentCharacterIndex }));
+  } catch (error) {
+    console.warn("저장에 실패했습니다.", error);
+  }
+}
+function loadState() {
+  try {
+    const saved = localStorage.getItem(SAVE_KEY);
+    if (!saved) return;
+    const state = JSON.parse(saved);
+    if (state && Array.isArray(state.characters)) {
+      characters = state.characters;
+      const index = Number.isInteger(state.currentCharacterIndex) ? state.currentCharacterIndex : -1;
+      currentCharacterIndex = characters.length ? Math.max(-1, Math.min(index, characters.length - 1)) : -1;
+    }
+  } catch (error) {
+    console.warn("저장된 데이터를 불러오지 못했습니다.", error);
+  }
+}
+
 const $ = id => document.getElementById(id);
 
 function setText(id, text) {
@@ -1166,6 +1190,7 @@ function renderCharacters() {
 
     button.addEventListener("click", () => {
       currentCharacterIndex = index;
+      saveState();
       applyTheme();
       renderCharacters();
       renderName();
@@ -1207,6 +1232,7 @@ $("addCharacterForm").addEventListener("submit", event => {
   });
 
   currentCharacterIndex = characters.length - 1;
+  saveState();
 
   closeModal("addCharacterModal");
   applyTheme();
@@ -1228,6 +1254,7 @@ $("deleteConfirmButton").addEventListener("click", () => {
   currentCharacterIndex = characters.length
     ? Math.min(currentCharacterIndex, characters.length - 1)
     : -1;
+  saveState();
 
   closeModal("deleteCharacterModal");
   applyTheme();
@@ -1339,6 +1366,7 @@ function openPartsModal(category) {
 
     button.addEventListener("click", () => {
       characters[currentCharacterIndex].parts[category] = part;
+      saveState();
       closeModal("partsModal");
       applyTheme();
       renderCharacters();
@@ -1364,6 +1392,7 @@ function openPartsModal(category) {
       name: "",
       image: ""
     };
+    saveState();
 
     closeModal("partsModal");
     applyTheme();
@@ -1387,6 +1416,7 @@ function openPartsModal(category) {
 
   clearButton.addEventListener("click", () => {
     characters[currentCharacterIndex].parts[category] = null;
+    saveState();
     closeModal("partsModal");
     applyTheme();
     renderCharacters();
@@ -1406,7 +1436,8 @@ function openPartsModal(category) {
   openModal("partsModal");
 }
   
-/* 실행 */
+/* 실행: 저장된 내용을 먼저 복원한 뒤 화면을 그립니다. */
+loadState();
 initializeText();
 applyTheme();
 renderCharacters();
