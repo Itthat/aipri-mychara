@@ -1244,7 +1244,7 @@ async function exportCharacterImage() {
   ctx.font = "bold 42px 'Jua', sans-serif";
   ctx.textAlign = "center";
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
-  ctx.fillText(character.name || "이름 없는 캐릭터", previewBox.x, 62, previewBox.w);
+  ctx.fillText(character.name || "이름 없는 캐릭터", previewBox.x + previewBox.w / 2, 62, previewBox.w);
   // 이후 텍스트도 모두 가운데 정렬합니다.
 
   const omitPreview = $("omitPreviewCheckbox").checked;
