@@ -49,6 +49,24 @@ h1 {
   font-size: 27px;
 }
 
+/* 이미지 저장 패널: 상단 오른쪽 */
+.export-panel {
+  position: absolute;
+  top: 28px;
+  right: max(24px, calc((100vw - 1200px) / 2));
+  width: 250px;
+  padding: 8px 10px;
+  color: var(--text);
+}
+.export-heading-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.export-heading { font-family: "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif; font-size: 21px; font-weight: 500; white-space: nowrap; }
+.export-button { padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--theme); color: var(--theme-text); font-size: 13px; white-space: nowrap; }
+.export-check-row { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 2px; }
+.export-note { margin: 0 0 0 22px; font-size: 10px; color: var(--subtext); line-height: 1.35; }
+@media (max-width: 760px) {
+  .export-panel { position: static; width: 100%; padding: 0; margin: 0 0 16px; }
+}
+
 .character-area {
   display: grid;
   width: 76%;
@@ -463,6 +481,14 @@ h1 {
 
 <body>
 <div class="page">
+  <section class="export-panel" aria-label="이미지 저장">
+    <div class="export-heading-row">
+      <div class="export-heading">이미지로 저장</div>
+      <button type="button" class="export-button" id="exportImageButton">저장</button>
+    </div>
+    <label class="export-check-row"><input type="checkbox" id="omitPreviewCheckbox"> 미리보기 이미지 미포함</label>
+    <p class="export-note">체크 시 빈칸으로 저장됩니다.</p>
+  </section>
   <section class="character-area">
     <div class="character-header">
       <h1 id="pageTitle"></h1>
@@ -1198,6 +1224,78 @@ function applyTheme() {
   root.style.setProperty("--theme-text", theme.text);
   root.style.setProperty("--border", theme.border);
 }
+
+/* 선택한 캐릭터를 고정 크기의 PNG 파츠 시트로 내보냅니다. */
+async function exportCharacterImage() {
+  if (currentCharacterIndex < 0) {
+    alert("먼저 캐릭터를 추가해 주세요.");
+    return;
+  }
+  const character = characters[currentCharacterIndex];
+  const canvas = document.createElement("canvas");
+  // 읽기 쉬운 글자와 적당한 파일 크기를 위한 고정 출력 크기
+  canvas.width = 1200;
+  canvas.height = 1400;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#303a30";
+  ctx.font = "bold 42px 'Jua', sans-serif";
+  ctx.fillText(character.name, 60, 76, 1080);
+  ctx.font = "24px 'IBM Plex Sans KR', sans-serif";
+  ctx.fillStyle = "#858d81";
+  ctx.fillText("선택한 파츠 목록", 60, 122);
+
+  const omitPreview = $("omitPreviewCheckbox").checked;
+  const previewBox = { x: 60, y: 160, w: 420, h: 420 };
+  if (!omitPreview) {
+    ctx.fillStyle = "#f4f4f4";
+    ctx.fillRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
+    ctx.strokeStyle = "#dddddd";
+    ctx.strokeRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
+    ctx.fillStyle = "#858d81";
+    ctx.font = "20px 'IBM Plex Sans KR', sans-serif";
+    ctx.fillText("미리보기 이미지 없음", previewBox.x + 24, previewBox.y + previewBox.h / 2);
+  } else {
+    // 흰 배경에서 해당 영역만 지워 투명 PNG로 저장합니다.
+    ctx.clearRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
+  }
+
+  const entries = categories.map(category => ({ category, part: character.parts[category] }))
+    .filter(item => item.part && item.part.none !== true);
+  const startX = 520, startY = 160, cellW = 200, cellH = 230, gapX = 20, gapY = 18;
+  for (let i = 0; i < entries.length; i++) {
+    const { category, part } = entries[i];
+    const col = i % 3, row = Math.floor(i / 3);
+    const x = startX + col * (cellW + gapX), y = startY + row * (cellH + gapY);
+    if (y + cellH > canvas.height - 40) break;
+    ctx.fillStyle = "#f8f8f8";
+    ctx.fillRect(x, y, cellW, cellH);
+    ctx.strokeStyle = "#dddddd";
+    ctx.strokeRect(x, y, cellW, cellH);
+    ctx.fillStyle = "#303a30";
+    ctx.font = "bold 17px 'IBM Plex Sans KR', sans-serif";
+    ctx.fillText(TEXT.categoryNames[category] || category, x + 10, y + 25, cellW - 20);
+    try {
+      const img = new Image();
+      img.src = part.image;
+      await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+      const maxW = cellW - 24, maxH = 150;
+      const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+      const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+      ctx.drawImage(img, x + (cellW - w) / 2, y + 38 + (maxH - h) / 2, w, h);
+    } catch (e) { /* 이미지가 없더라도 이름은 저장합니다. */ }
+    ctx.fillStyle = "#303a30";
+    ctx.font = "14px 'IBM Plex Sans KR', sans-serif";
+    ctx.fillText(part.name || "선택 파츠", x + 10, y + 207, cellW - 20);
+  }
+
+  const link = document.createElement("a");
+  link.download = `${character.name.replace(/[\\/:*?"<>|]/g, "_") || "캐릭터"}_파츠.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+$("exportImageButton").addEventListener("click", exportCharacterImage);
 
 /* 캐릭터 버튼 목록 */
 function renderCharacters() {
