@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>마이캐릭터 파츠 정리</title>
 
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500&family=Jua&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -85,7 +85,7 @@ h1 {
 #pageTitle {
   white-space: nowrap;
   text-align: left;
-  font-family: "Jua", sans-serif;
+  font-family: "IBM Plex Sans KR", "IBM Plex Sans JP", sans-serif;
   font-size: 22px;
 }
 
@@ -1233,6 +1233,11 @@ async function exportCharacterImage() {
   }
   const character = characters[currentCharacterIndex];
   const exportTheme = getThemeForCharacter(character);
+  // iOS Safari에서는 다운로드 속성만으로 파일 저장이 되지 않는 경우가 있어
+  // 사용자 동작 직후 새 탭을 열어 이미지 저장 경로를 제공합니다.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const exportWindow = isIOS ? window.open("about:blank", "_blank") : null;
   const canvas = document.createElement("canvas");
   // 가로형 고정 출력 이미지: 왼쪽 미리보기 + 오른쪽 3-5-5 파츠 표
   canvas.width = 1800;
@@ -1242,7 +1247,7 @@ async function exportCharacterImage() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#333333";
-  ctx.font = "bold 42px 'Jua', sans-serif";
+  ctx.font = "500 42px 'IBM Plex Sans KR', 'IBM Plex Sans JP', sans-serif";
   ctx.textAlign = "center";
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
   ctx.fillText(character.name || "이름 없는 캐릭터", previewBox.x + previewBox.w / 2, 62, previewBox.w);
@@ -1330,8 +1335,17 @@ async function exportCharacterImage() {
 
   const link = document.createElement("a");
   link.download = `${character.name.replace(/[\\/:*?"<>|]/g, "_") || "캐릭터"}_파츠.png`;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
+  const imageDataUrl = canvas.toDataURL("image/png");
+  if (isIOS && exportWindow) {
+    // iPhone/iPad: 이미지를 새 탭에 띄우면 길게 눌러 사진 앱에 저장할 수 있습니다.
+    exportWindow.document.open();
+    exportWindow.document.write(`<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>이미지 저장</title><style>body{margin:0;padding:16px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;text-align:center}p{font-size:15px;line-height:1.5}img{display:block;width:100%;height:auto;margin:16px auto}</style></head><body><p>이미지를 길게 누른 다음 <b>사진에 저장</b> 또는 <b>이미지 저장</b>을 선택해 주세요.</p><img src="${imageDataUrl}" alt="캐릭터 파츠 저장 이미지"></body></html>`);
+    exportWindow.document.close();
+  } else {
+    if (exportWindow) exportWindow.close();
+    link.href = imageDataUrl;
+    link.click();
+  }
 }
 $("exportImageButton").addEventListener("click", exportCharacterImage);
 
