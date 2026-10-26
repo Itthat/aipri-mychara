@@ -457,6 +457,7 @@ h1 {
   <section class="name-area">
     <div class="name-label" id="nameLabel"></div>
     <div class="character-name" id="characterName"></div>
+    <button class="btn" id="editCharacterNameButton" type="button" disabled>이름 수정</button>
   </section>
 
   <section class="editor-layout">
@@ -483,6 +484,21 @@ h1 {
       <div class="modal-buttons">
         <button type="button" class="btn" data-close="addCharacterModal" id="addCancelButton"></button>
         <button type="submit" class="btn btn-primary" id="addConfirmButton"></button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- 캐릭터 이름 수정 -->
+<div class="modal-overlay" id="editCharacterNameModal">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="editNameModalTitle">
+    <h2 id="editNameModalTitle">이름 수정</h2>
+    <p class="modal-description">변경할 캐릭터 이름을 입력하세요.</p>
+    <form id="editCharacterNameForm">
+      <input class="modal-input" id="editCharacterNameInput" type="text" maxlength="80" required>
+      <div class="modal-buttons">
+        <button type="button" class="btn" data-close="editCharacterNameModal">취소</button>
+        <button type="submit" class="btn btn-primary">수정</button>
       </div>
     </form>
   </section>
@@ -1200,7 +1216,8 @@ function renderCharacters() {
     list.appendChild(button);
   });
 
-  $("deleteCharacterButton").disabled = currentCharacterIndex < 0;
+  $"deleteCharacterButton").disabled = currentCharacterIndex < 0;
+  $("editCharacterNameButton").disabled = currentCharacterIndex < 0;
 }
 
 function renderName() {
@@ -1239,6 +1256,27 @@ $("addCharacterForm").addEventListener("submit", event => {
   renderCharacters();
   renderName();
   renderParts();
+});
+
+/* 캐릭터 이름 수정 */
+$("editCharacterNameButton").addEventListener("click", () => {
+  if (currentCharacterIndex < 0) return;
+  $("editCharacterNameInput").value = characters[currentCharacterIndex].name;
+  openModal("editCharacterNameModal");
+  $("editCharacterNameInput").focus();
+  $("editCharacterNameInput").select();
+});
+
+$("editCharacterNameForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if (currentCharacterIndex < 0) return;
+  const name = $("editCharacterNameInput").value.trim();
+  if (!name) { $("editCharacterNameInput").focus(); return; }
+  characters[currentCharacterIndex].name = name;
+  saveState();
+  closeModal("editCharacterNameModal");
+  renderCharacters();
+  renderName();
 });
 
 /* 캐릭터 삭제 */
