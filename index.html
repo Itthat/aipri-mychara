@@ -1233,61 +1233,79 @@ async function exportCharacterImage() {
   }
   const character = characters[currentCharacterIndex];
   const canvas = document.createElement("canvas");
-  // 읽기 쉬운 글자와 적당한 파일 크기를 위한 고정 출력 크기
-  canvas.width = 1200;
-  canvas.height = 1400;
+  // 가로형 고정 출력 이미지: 왼쪽 미리보기 + 오른쪽 3-5-5 파츠 표
+  canvas.width = 1800;
+  canvas.height = 900;
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillStyle = "#303a30";
   ctx.font = "bold 42px 'Jua', sans-serif";
-  ctx.fillText(character.name, 60, 76, 1080);
-  ctx.font = "24px 'IBM Plex Sans KR', sans-serif";
-  ctx.fillStyle = "#858d81";
-  ctx.fillText("선택한 파츠 목록", 60, 122);
+  ctx.fillText(character.name || "이름 없는 캐릭터", 48, 62, 850);
 
   const omitPreview = $("omitPreviewCheckbox").checked;
-  const previewBox = { x: 60, y: 160, w: 420, h: 420 };
-  if (!omitPreview) {
-    ctx.fillStyle = "#f4f4f4";
-    ctx.fillRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
-    ctx.strokeStyle = "#dddddd";
-    ctx.strokeRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
-    ctx.fillStyle = "#858d81";
-    ctx.font = "20px 'IBM Plex Sans KR', sans-serif";
-    ctx.fillText("미리보기 이미지 없음", previewBox.x + 24, previewBox.y + previewBox.h / 2);
-  } else {
-    // 흰 배경에서 해당 영역만 지워 투명 PNG로 저장합니다.
+  const previewBox = { x: 48, y: 100, w: 390, h: 390 };
+  const roundedRect = (x, y, w, h, r) => {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+  };
+  if (omitPreview) {
+    // 체크 시 모서리가 둥근 미리보기 영역을 실제 투명하게 저장
+    ctx.save();
+    roundedRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h, 22);
+    ctx.clip();
     ctx.clearRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h);
+    ctx.restore();
+  } else {
+    roundedRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h, 22);
+    ctx.fillStyle = "#f4f4f4";
+    ctx.fill();
+    ctx.strokeStyle = "#dddddd";
+    ctx.stroke();
+    ctx.fillStyle = "#858d81";
+    ctx.font = "18px 'IBM Plex Sans KR', sans-serif";
+    ctx.fillText("미리보기 이미지 없음", previewBox.x + 75, previewBox.y + previewBox.h / 2);
   }
 
-  const entries = categories.map(category => ({ category, part: character.parts[category] }))
-    .filter(item => item.part && item.part.none !== true);
-  const startX = 520, startY = 160, cellW = 200, cellH = 230, gapX = 20, gapY = 18;
-  for (let i = 0; i < entries.length; i++) {
-    const { category, part } = entries[i];
-    const col = i % 3, row = Math.floor(i / 3);
-    const x = startX + col * (cellW + gapX), y = startY + row * (cellH + gapY);
-    if (y + cellH > canvas.height - 40) break;
-    ctx.fillStyle = "#f8f8f8";
-    ctx.fillRect(x, y, cellW, cellH);
-    ctx.strokeStyle = "#dddddd";
-    ctx.strokeRect(x, y, cellW, cellH);
-    ctx.fillStyle = "#303a30";
-    ctx.font = "bold 17px 'IBM Plex Sans KR', sans-serif";
-    ctx.fillText(TEXT.categoryNames[category] || category, x + 10, y + 25, cellW - 20);
-    try {
-      const img = new Image();
-      img.src = part.image;
-      await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-      const maxW = cellW - 24, maxH = 150;
-      const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
-      const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
-      ctx.drawImage(img, x + (cellW - w) / 2, y + 38 + (maxH - h) / 2, w, h);
-    } catch (e) { /* 이미지가 없더라도 이름은 저장합니다. */ }
-    ctx.fillStyle = "#303a30";
-    ctx.font = "14px 'IBM Plex Sans KR', sans-serif";
-    ctx.fillText(part.name || "선택 파츠", x + 10, y + 207, cellW - 20);
+  // 선택하지 않은 파츠도 빠뜨리지 않고 모든 카테고리를 내보냅니다.
+  const entries = categories.map(category => ({ category, part: character.parts[category] || null }));
+  const gridX = 480, gridY = 100;
+  const gapX = 12, gapY = 14;
+  const cellW = 244, cellH = 230;
+  // 화면 순서 그대로 3개 / 5개 / 5개로 배치
+  const rowLayout = [entries.slice(0, 3), entries.slice(3, 8), entries.slice(8, 13)];
+  for (let row = 0; row < rowLayout.length; row++) {
+    const rowEntries = rowLayout[row];
+    for (let col = 0; col < rowEntries.length; col++) {
+      const { category, part } = rowEntries[col];
+      const x = gridX + col * (cellW + gapX);
+      const y = gridY + row * (cellH + gapY);
+      roundedRect(x, y, cellW, cellH, 18);
+      ctx.fillStyle = "#f8f8f8";
+      ctx.fill();
+      ctx.strokeStyle = "#dddddd";
+      ctx.stroke();
+      ctx.fillStyle = "#303a30";
+      ctx.font = "bold 18px 'IBM Plex Sans KR', sans-serif";
+      ctx.fillText(TEXT.categoryNames[category] || category, x + 12, y + 28, cellW - 24);
+
+      if (part && part.none !== true && part.image) {
+        try {
+          const img = new Image();
+          img.src = part.image;
+          await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+          const maxW = cellW - 28, maxH = 145;
+          const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+          const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+          ctx.save();
+          roundedRect(x, y, cellW, cellH, 18);
+          ctx.clip();
+          ctx.drawImage(img, x + (cellW - w) / 2, y + 40 + (maxH - h) / 2, w, h);
+          ctx.restore();
+        } catch (e) { /* 이미지 로딩 실패 시에도 카테고리와 이름 칸은 유지 */ }
+      }
+    }
   }
 
   const link = document.createElement("a");
