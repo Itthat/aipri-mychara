@@ -1251,13 +1251,21 @@ async function exportCharacterImage() {
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
   const characterName = character.name || "이름 없는 캐릭터";
 
-  // 캔버스에 사용할 웹폰트가 모두 준비될 때까지 기다립니다.
-  // 캐릭터 이름은 Jua, 파츠 분류명은 IBM Plex Sans KR을 사용합니다.
-  // 로딩 시간 제한이나 임의의 대체 폰트 전환은 두지 않습니다.
+  // 캔버스에 실제로 출력할 모든 한글 문자를 포함해 웹폰트 로딩을 기다립니다.
+  // IBM Plex Sans KR은 문서에서 제공하는 500 굵기를 사용하며, 시간 제한이나 대체 폰트 전환은 없습니다.
+  const categoryLabelText = categories
+    .map(category => TEXT.categoryNames[category] || category)
+    .join(" ");
   if (document.fonts && document.fonts.load) {
     await document.fonts.load('42px "Jua"', characterName);
-    await document.fonts.load('bold 18px "IBM Plex Sans KR"', '피부 헤어 데코 메이크업 부탁해 주얼');
+    await document.fonts.load('500 18px "IBM Plex Sans KR"', categoryLabelText + " 미리보기 이미지 없음");
     await document.fonts.ready;
+    // 폰트가 준비된 뒤 실제 출력에 사용할 글리프가 준비됐는지도 확인합니다.
+    while (!document.fonts.check('500 18px "IBM Plex Sans KR"', categoryLabelText + " 미리보기 이미지 없음") ||
+           !document.fonts.check('42px "Jua"', characterName)) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await document.fonts.ready;
+    }
   }
   ctx.font = '42px "Jua", sans-serif';
   ctx.textBaseline = "alphabetic";
@@ -1321,9 +1329,16 @@ async function exportCharacterImage() {
       ctx.stroke();
       // 웹 카드처럼 헤더에만 주얼색을 적용하고 분류명은 중앙 정렬합니다.
       ctx.fillStyle = exportTheme.text;
-      ctx.font = "bold 18px 'IBM Plex Sans KR', sans-serif";
+      ctx.font = "500 18px 'IBM Plex Sans KR', sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(TEXT.categoryNames[category] || category, x + cellW / 2, y + 28, cellW - 24);
+      const categoryLabel = TEXT.categoryNames[category] || category;
+      let labelFontSize = 18;
+      while (labelFontSize > 12) {
+        ctx.font = `500 ${labelFontSize}px 'IBM Plex Sans KR', sans-serif`;
+        if (ctx.measureText(categoryLabel).width <= cellW - 24) break;
+        labelFontSize--;
+      }
+      ctx.fillText(categoryLabel, x + cellW / 2, y + 28, cellW - 24);
 
       if (part && part.none !== true && part.image) {
         try {
