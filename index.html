@@ -1232,6 +1232,7 @@ async function exportCharacterImage() {
     return;
   }
   const character = characters[currentCharacterIndex];
+  const exportTheme = getThemeForCharacter(character);
   const canvas = document.createElement("canvas");
   // 가로형 고정 출력 이미지: 왼쪽 미리보기 + 오른쪽 3-5-5 파츠 표
   canvas.width = 1800;
@@ -1240,7 +1241,7 @@ async function exportCharacterImage() {
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "#303a30";
+  ctx.fillStyle = exportTheme.dark;
   ctx.font = "bold 42px 'Jua', sans-serif";
   ctx.textAlign = "center";
   const previewBox = { x: 48, y: 100, w: 390, h: 390 };
@@ -1261,9 +1262,9 @@ async function exportCharacterImage() {
     ctx.restore();
   } else {
     roundedRect(previewBox.x, previewBox.y, previewBox.w, previewBox.h, 22);
-    ctx.fillStyle = "#f4f4f4";
+    ctx.fillStyle = exportTheme.light;
     ctx.fill();
-    ctx.strokeStyle = "#dddddd";
+    ctx.strokeStyle = exportTheme.border;
     ctx.stroke();
     ctx.fillStyle = "#858d81";
     ctx.font = "18px 'IBM Plex Sans KR', sans-serif";
@@ -1285,12 +1286,12 @@ async function exportCharacterImage() {
       const x = gridX + col * (cellW + gapX);
       const y = gridY + row * (cellH + gapY);
       roundedRect(x, y, cellW, cellH, 18);
-      ctx.fillStyle = "#f8f8f8";
+      ctx.fillStyle = exportTheme.light;
       ctx.fill();
-      ctx.strokeStyle = "#dddddd";
+      ctx.strokeStyle = exportTheme.border;
       ctx.stroke();
-      // 파츠 칸 안의 글자는 중앙 정렬합니다.
-      ctx.fillStyle = "#303a30";
+      // 파츠 칸 안의 글자는 중앙 정렬하며 선택한 주얼 테마 색상을 적용합니다.
+      ctx.fillStyle = exportTheme.text;
       ctx.font = "bold 18px 'IBM Plex Sans KR', sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(TEXT.categoryNames[category] || category, x + cellW / 2, y + 28, cellW - 24);
