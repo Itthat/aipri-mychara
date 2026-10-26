@@ -134,8 +134,10 @@ h1 {
   padding: 0 18px;
   height: 70px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -147,12 +149,27 @@ h1 {
 }
 
 .character-name {
+  flex: 1;
+  min-width: 0;
   font-size: 22px;
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.name-edit-button {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+}
+.name-edit-button:hover { background: var(--theme-light); }
+.name-edit-button[hidden] { display: none; }
 
 .empty-message {
   padding: 22px 12px;
@@ -457,7 +474,7 @@ h1 {
   <section class="name-area">
     <div class="name-label" id="nameLabel"></div>
     <div class="character-name" id="characterName"></div>
-    <button class="btn" id="editCharacterNameButton" type="button" disabled>이름 수정</button>
+    <button type="button" class="name-edit-button" id="editCharacterNameButton" hidden>수정</button>
   </section>
 
   <section class="editor-layout">
@@ -484,21 +501,6 @@ h1 {
       <div class="modal-buttons">
         <button type="button" class="btn" data-close="addCharacterModal" id="addCancelButton"></button>
         <button type="submit" class="btn btn-primary" id="addConfirmButton"></button>
-      </div>
-    </form>
-  </section>
-</div>
-
-<!-- 캐릭터 이름 수정 -->
-<div class="modal-overlay" id="editCharacterNameModal">
-  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="editNameModalTitle">
-    <h2 id="editNameModalTitle">이름 수정</h2>
-    <p class="modal-description">변경할 캐릭터 이름을 입력하세요.</p>
-    <form id="editCharacterNameForm">
-      <input class="modal-input" id="editCharacterNameInput" type="text" maxlength="80" required>
-      <div class="modal-buttons">
-        <button type="button" class="btn" data-close="editCharacterNameModal">취소</button>
-        <button type="submit" class="btn btn-primary">수정</button>
       </div>
     </form>
   </section>
@@ -1216,8 +1218,8 @@ function renderCharacters() {
     list.appendChild(button);
   });
 
-  $"deleteCharacterButton").disabled = currentCharacterIndex < 0;
-  $("editCharacterNameButton").disabled = currentCharacterIndex < 0;
+  $("deleteCharacterButton").disabled = currentCharacterIndex < 0;
+  $("editCharacterNameButton").hidden = currentCharacterIndex < 0;
 }
 
 function renderName() {
@@ -1225,7 +1227,28 @@ function renderName() {
     currentCharacterIndex >= 0
       ? characters[currentCharacterIndex].name
       : "";
+  $("editCharacterNameButton").hidden = currentCharacterIndex < 0;
 }
+
+/* 선택한 캐릭터의 이름만 수정합니다. 파츠 데이터는 변경하지 않습니다. */
+$("editCharacterNameButton").addEventListener("click", () => {
+  if (currentCharacterIndex < 0) return;
+
+  const currentName = characters[currentCharacterIndex].name;
+  const editedName = window.prompt("캐릭터 이름을 수정하세요.", currentName);
+  if (editedName === null) return;
+
+  const name = editedName.trim();
+  if (!name) {
+    window.alert("캐릭터 이름은 비워 둘 수 없습니다.");
+    return;
+  }
+
+  characters[currentCharacterIndex].name = name;
+  saveState();
+  renderCharacters();
+  renderName();
+});
 
 /* 캐릭터 추가 */
 $("addCharacterButton").addEventListener("click", () => {
@@ -1256,27 +1279,6 @@ $("addCharacterForm").addEventListener("submit", event => {
   renderCharacters();
   renderName();
   renderParts();
-});
-
-/* 캐릭터 이름 수정 */
-$("editCharacterNameButton").addEventListener("click", () => {
-  if (currentCharacterIndex < 0) return;
-  $("editCharacterNameInput").value = characters[currentCharacterIndex].name;
-  openModal("editCharacterNameModal");
-  $("editCharacterNameInput").focus();
-  $("editCharacterNameInput").select();
-});
-
-$("editCharacterNameForm").addEventListener("submit", event => {
-  event.preventDefault();
-  if (currentCharacterIndex < 0) return;
-  const name = $("editCharacterNameInput").value.trim();
-  if (!name) { $("editCharacterNameInput").focus(); return; }
-  characters[currentCharacterIndex].name = name;
-  saveState();
-  closeModal("editCharacterNameModal");
-  renderCharacters();
-  renderName();
 });
 
 /* 캐릭터 삭제 */
