@@ -506,6 +506,21 @@ h1 {
   </section>
 </div>
 
+<!-- 캐릭터 이름 수정 -->
+<div class="modal-overlay" id="editCharacterNameModal">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="editNameModalTitle">
+    <h2 id="editNameModalTitle">이름 수정</h2>
+    <p class="modal-description" id="editNameModalDescription">캐릭터 이름을 수정하세요.</p>
+    <form id="editCharacterNameForm">
+      <input class="modal-input" id="editCharacterNameInput" type="text" maxlength="80" required>
+      <div class="modal-buttons">
+        <button type="button" class="btn" data-close="editCharacterNameModal" id="editNameCancelButton">취소</button>
+        <button type="submit" class="btn btn-primary" id="editNameConfirmButton">수정</button>
+      </div>
+    </form>
+  </section>
+</div>
+
 <!-- 캐릭터 삭제 확인 -->
 <div class="modal-overlay" id="deleteCharacterModal">
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
@@ -1230,22 +1245,32 @@ function renderName() {
   $("editCharacterNameButton").hidden = currentCharacterIndex < 0;
 }
 
-/* 선택한 캐릭터의 이름만 수정합니다. 파츠 데이터는 변경하지 않습니다. */
+/* 선택한 캐릭터의 이름만 수정합니다. 기존 추가창과 같은 모달 안에서 편집합니다. */
 $("editCharacterNameButton").addEventListener("click", () => {
   if (currentCharacterIndex < 0) return;
 
-  const currentName = characters[currentCharacterIndex].name;
-  const editedName = window.prompt("캐릭터 이름을 수정하세요.", currentName);
-  if (editedName === null) return;
+  $("editCharacterNameInput").value = characters[currentCharacterIndex].name;
+  openModal("editCharacterNameModal");
+  $("editCharacterNameInput").focus();
+  $("editCharacterNameInput").select();
+});
 
-  const name = editedName.trim();
+$("editCharacterNameForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if (currentCharacterIndex < 0) {
+    closeModal("editCharacterNameModal");
+    return;
+  }
+
+  const name = $("editCharacterNameInput").value.trim();
   if (!name) {
-    window.alert("캐릭터 이름은 비워 둘 수 없습니다.");
+    $("editCharacterNameInput").focus();
     return;
   }
 
   characters[currentCharacterIndex].name = name;
   saveState();
+  closeModal("editCharacterNameModal");
   renderCharacters();
   renderName();
 });
